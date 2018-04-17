@@ -1195,17 +1195,6 @@ F 3 "" H 6060 2080 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L D_Schottky D?
-U 1 1 5AD43E7A
-P 8650 2315
-F 0 "D?" H 8650 2415 50  0000 C CNN
-F 1 "MBR120" H 8645 2245 50  0000 C CNN
-F 2 "" H 8650 2315 50  0000 C CNN
-F 3 "" H 8650 2315 50  0000 C CNN
-	1    8650 2315
-	0    -1   -1   0   
-$EndComp
-$Comp
 L Fuse_Small F?
 U 1 1 5AD443AE
 P 8470 775
@@ -1465,15 +1454,9 @@ Wire Wire Line
 Wire Wire Line
 	2155 2605 1970 2605
 Wire Wire Line
-	3555 2405 3700 2405
+	3700 2405 3555 2405
 Wire Wire Line
-	3700 2405 3700 2305
-Wire Wire Line
-	3700 2305 3700 2205
-Wire Wire Line
-	3700 2205 3700 2105
-Wire Wire Line
-	3700 2105 3700 1925
+	3700 1925 3700 2405
 Wire Wire Line
 	3555 2305 3700 2305
 Connection ~ 3700 2305
@@ -1504,13 +1487,7 @@ Wire Wire Line
 Wire Wire Line
 	3555 4805 3605 4805
 Wire Wire Line
-	3605 4805 3605 4905
-Wire Wire Line
-	3605 4905 3605 5005
-Wire Wire Line
-	3605 5005 3605 5105
-Wire Wire Line
-	3605 5105 3605 5185
+	3605 4805 3605 5185
 Wire Wire Line
 	3555 5105 3605 5105
 Connection ~ 3605 5105
@@ -1557,11 +1534,7 @@ Wire Notes Line
 Wire Notes Line
 	11205 3355 11205 3365
 Wire Wire Line
-	8650 2595 8895 2595
-Wire Wire Line
-	8895 2595 9110 2595
-Wire Wire Line
-	9110 2595 9520 2595
+	8650 2595 9520 2595
 Wire Wire Line
 	8895 2595 8895 2465
 Wire Wire Line
@@ -1576,16 +1549,10 @@ Wire Wire Line
 Wire Wire Line
 	8895 2165 8895 2085
 Wire Wire Line
-	8650 2595 8650 2465
+	8650 2100 8650 2595
 Connection ~ 8895 2595
 Wire Wire Line
-	10470 2595 10520 2595
-Wire Wire Line
-	10520 2595 10710 2595
-Wire Wire Line
-	10710 2595 10885 2595
-Wire Wire Line
-	10885 2595 10985 2595
+	10470 2595 10985 2595
 Wire Wire Line
 	10885 2595 10885 2640
 Wire Wire Line
@@ -1600,15 +1567,11 @@ Connection ~ 10885 2595
 Wire Wire Line
 	10520 2840 10520 2945
 Wire Wire Line
-	10710 2840 10710 2945
-Wire Wire Line
-	10710 2945 10710 3005
+	10710 2840 10710 3005
 Wire Wire Line
 	10885 2945 10885 2840
 Wire Wire Line
-	10520 2945 10710 2945
-Wire Wire Line
-	10710 2945 10885 2945
+	10520 2945 10885 2945
 Connection ~ 10710 2945
 Wire Notes Line
 	8145 1675 11215 1675
@@ -1646,8 +1609,6 @@ Wire Wire Line
 	8245 2225 8290 2225
 Wire Wire Line
 	8290 2225 8290 2130
-Wire Wire Line
-	8650 2165 8650 2100
 Wire Wire Line
 	8330 680  8330 775 
 Wire Wire Line
@@ -1693,9 +1654,7 @@ Wire Notes Line
 Wire Notes Line
 	5275 6540 6965 6540
 Wire Wire Line
-	5450 2500 5450 2540
-Wire Wire Line
-	5450 2540 5450 2585
+	5450 2500 5450 2585
 Wire Wire Line
 	5450 2785 5450 2845
 Wire Wire Line
@@ -1716,9 +1675,7 @@ Wire Wire Line
 Wire Wire Line
 	5725 5145 5725 5195
 Wire Wire Line
-	6260 5145 6505 5145
-Wire Wire Line
-	6505 5145 6655 5145
+	6260 5145 6655 5145
 Wire Wire Line
 	2155 3905 1990 3905
 Wire Wire Line
@@ -1734,13 +1691,9 @@ Wire Notes Line
 Wire Notes Line
 	8135 4285 8135 4315
 Wire Wire Line
-	1435 1940 1435 2100
+	1435 1940 1435 2405
 Wire Wire Line
-	1435 2100 1435 2405
-Wire Wire Line
-	1235 1940 1235 2100
-Wire Wire Line
-	1235 2100 1235 2505
+	1235 1940 1235 2505
 Connection ~ 1435 2100
 Connection ~ 1235 2100
 $Comp
@@ -1785,9 +1738,7 @@ Wire Wire Line
 Wire Wire Line
 	1345 1550 1345 1630
 Wire Wire Line
-	1235 1630 1345 1630
-Wire Wire Line
-	1345 1630 1435 1630
+	1235 1630 1435 1630
 Connection ~ 1345 1630
 Wire Wire Line
 	1435 1630 1435 1740
