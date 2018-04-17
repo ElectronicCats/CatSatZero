@@ -1,5 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:MainBoard-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,6 +28,73 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:CatSatZero
+LIBS:74xgxx
+LIBS:ac-dc
+LIBS:actel
+LIBS:allegro
+LIBS:Altera
+LIBS:analog_devices
+LIBS:battery_management
+LIBS:bbd
+LIBS:bosch
+LIBS:brooktre
+LIBS:cmos_ieee
+LIBS:dc-dc
+LIBS:diode
+LIBS:elec-unifil
+LIBS:ESD_Protection
+LIBS:ftdi
+LIBS:gennum
+LIBS:graphic_symbols
+LIBS:hc11
+LIBS:infineon
+LIBS:intersil
+LIBS:ir
+LIBS:Lattice
+LIBS:leds
+LIBS:LEM
+LIBS:logic_programmable
+LIBS:maxim
+LIBS:mechanical
+LIBS:microchip_dspic33dsc
+LIBS:microchip_pic10mcu
+LIBS:microchip_pic12mcu
+LIBS:microchip_pic16mcu
+LIBS:microchip_pic18mcu
+LIBS:microchip_pic24mcu
+LIBS:microchip_pic32mcu
+LIBS:modules
+LIBS:motor_drivers
+LIBS:motors
+LIBS:msp430
+LIBS:nordicsemi
+LIBS:nxp_armmcu
+LIBS:nxp
+LIBS:onsemi
+LIBS:Oscillators
+LIBS:Power_Management
+LIBS:powerint
+LIBS:pspice
+LIBS:references
+LIBS:relays
+LIBS:rfcom
+LIBS:RFSolutions
+LIBS:sensors
+LIBS:silabs
+LIBS:stm8
+LIBS:stm32
+LIBS:supertex
+LIBS:switches
+LIBS:transf
+LIBS:triac_thyristor
+LIBS:ttl_ieee
+LIBS:video
+LIBS:wiznet
+LIBS:Worldsemi
+LIBS:Xicor
+LIBS:zetex
+LIBS:Zilog
 LIBS:MainBoard-cache
 EELAYER 25 0
 EELAYER END
@@ -1296,33 +1362,17 @@ F 3 "" H 6815 3810 50  0000 C CNN
 	1    6815 3810
 	1    0    0    -1  
 $EndComp
-$Comp
-L B3U-1000P S?
-U 1 1 5AD4D846
-P 6510 4980
-F 0 "S?" H 6209 5181 50  0000 L BNN
-F 1 "B3U-1000P" H 6209 4679 50  0000 L BNN
-F 2 "SW_B3U-1000P" H 6510 4980 50  0001 L BNN
-F 3 "None" H 6510 4980 50  0001 L BNN
-F 4 "Omron" H 6510 4980 50  0001 L BNN "Campo4"
-F 5 "B3U-1000P" H 6510 4980 50  0001 L BNN "Campo5"
-F 6 "Switch Tactile N.O. SPST Round Button Gull Wing 0.05A 12VDC 1.5N SMD Embossed T/R" H 6510 4980 50  0001 L BNN "Campo6"
-F 7 "0.69 USD" H 6510 4980 50  0001 L BNN "Campo7"
-F 8 "Good" H 6510 4980 50  0001 L BNN "Campo8"
-	1    6510 4980
-	1    0    0    -1  
-$EndComp
-Text Label 7155 4980 0    60   ~ 0
+Text Label 6655 5145 0    60   ~ 0
 RESET
 $Comp
 L GND #PWR?
 U 1 1 5AD4E61D
-P 5875 5030
-F 0 "#PWR?" H 5875 4780 50  0001 C CNN
-F 1 "GND" H 5875 4880 50  0000 C CNN
-F 2 "" H 5875 5030 50  0000 C CNN
-F 3 "" H 5875 5030 50  0000 C CNN
-	1    5875 5030
+P 5725 5195
+F 0 "#PWR?" H 5725 4945 50  0001 C CNN
+F 1 "GND" H 5725 5045 50  0000 C CNN
+F 2 "" H 5725 5195 50  0000 C CNN
+F 3 "" H 5725 5195 50  0000 C CNN
+	1    5725 5195
 	1    0    0    -1  
 $EndComp
 Text Label 1990 3905 0    60   ~ 0
@@ -1417,7 +1467,13 @@ Wire Wire Line
 Wire Wire Line
 	3555 2405 3700 2405
 Wire Wire Line
-	3700 2405 3700 1925
+	3700 2405 3700 2305
+Wire Wire Line
+	3700 2305 3700 2205
+Wire Wire Line
+	3700 2205 3700 2105
+Wire Wire Line
+	3700 2105 3700 1925
 Wire Wire Line
 	3555 2305 3700 2305
 Connection ~ 3700 2305
@@ -1448,7 +1504,13 @@ Wire Wire Line
 Wire Wire Line
 	3555 4805 3605 4805
 Wire Wire Line
-	3605 4805 3605 5185
+	3605 4805 3605 4905
+Wire Wire Line
+	3605 4905 3605 5005
+Wire Wire Line
+	3605 5005 3605 5105
+Wire Wire Line
+	3605 5105 3605 5185
 Wire Wire Line
 	3555 5105 3605 5105
 Connection ~ 3605 5105
@@ -1495,7 +1557,11 @@ Wire Notes Line
 Wire Notes Line
 	11205 3355 11205 3365
 Wire Wire Line
-	8650 2595 9520 2595
+	8650 2595 8895 2595
+Wire Wire Line
+	8895 2595 9110 2595
+Wire Wire Line
+	9110 2595 9520 2595
 Wire Wire Line
 	8895 2595 8895 2465
 Wire Wire Line
@@ -1513,7 +1579,13 @@ Wire Wire Line
 	8650 2595 8650 2465
 Connection ~ 8895 2595
 Wire Wire Line
-	10470 2595 10985 2595
+	10470 2595 10520 2595
+Wire Wire Line
+	10520 2595 10710 2595
+Wire Wire Line
+	10710 2595 10885 2595
+Wire Wire Line
+	10885 2595 10985 2595
 Wire Wire Line
 	10885 2595 10885 2640
 Wire Wire Line
@@ -1528,11 +1600,15 @@ Connection ~ 10885 2595
 Wire Wire Line
 	10520 2840 10520 2945
 Wire Wire Line
-	10710 2840 10710 3005
+	10710 2840 10710 2945
+Wire Wire Line
+	10710 2945 10710 3005
 Wire Wire Line
 	10885 2945 10885 2840
 Wire Wire Line
-	10520 2945 10885 2945
+	10520 2945 10710 2945
+Wire Wire Line
+	10710 2945 10885 2945
 Connection ~ 10710 2945
 Wire Notes Line
 	8145 1675 11215 1675
@@ -1617,7 +1693,9 @@ Wire Notes Line
 Wire Notes Line
 	5275 6540 6965 6540
 Wire Wire Line
-	5450 2500 5450 2585
+	5450 2500 5450 2540
+Wire Wire Line
+	5450 2540 5450 2585
 Wire Wire Line
 	5450 2785 5450 2845
 Wire Wire Line
@@ -1634,11 +1712,13 @@ Wire Wire Line
 Wire Wire Line
 	6060 2225 6060 2080
 Wire Wire Line
-	6010 4980 5875 4980
+	5860 5145 5725 5145
 Wire Wire Line
-	5875 4980 5875 5030
+	5725 5145 5725 5195
 Wire Wire Line
-	7010 4980 7155 4980
+	6260 5145 6505 5145
+Wire Wire Line
+	6505 5145 6655 5145
 Wire Wire Line
 	2155 3905 1990 3905
 Wire Wire Line
@@ -1654,9 +1734,13 @@ Wire Notes Line
 Wire Notes Line
 	8135 4285 8135 4315
 Wire Wire Line
-	1435 1940 1435 2405
+	1435 1940 1435 2100
 Wire Wire Line
-	1235 1940 1235 2505
+	1435 2100 1435 2405
+Wire Wire Line
+	1235 1940 1235 2100
+Wire Wire Line
+	1235 2100 1235 2505
 Connection ~ 1435 2100
 Connection ~ 1235 2100
 $Comp
@@ -1701,7 +1785,9 @@ Wire Wire Line
 Wire Wire Line
 	1345 1550 1345 1630
 Wire Wire Line
-	1235 1630 1435 1630
+	1235 1630 1345 1630
+Wire Wire Line
+	1345 1630 1435 1630
 Connection ~ 1345 1630
 Wire Wire Line
 	1435 1630 1435 1740
@@ -1714,6 +1800,44 @@ F 1 "AP2114" H 10120 2545 60  0000 C CNN
 F 2 "" H 9970 2795 60  0000 C CNN
 F 3 "" H 9970 2795 60  0000 C CNN
 	1    9970 2795
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3.3V #PWR?
+U 1 1 5AD55919
+P 6505 4730
+F 0 "#PWR?" H 6505 4580 50  0001 C CNN
+F 1 "+3.3V" H 6505 4870 50  0000 C CNN
+F 2 "" H 6505 4730 50  0000 C CNN
+F 3 "" H 6505 4730 50  0000 C CNN
+	1    6505 4730
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 5AD55C99
+P 6505 4905
+F 0 "R?" H 6535 4925 50  0000 L CNN
+F 1 "10k" H 6535 4865 50  0000 L CNN
+F 2 "" H 6505 4905 50  0000 C CNN
+F 3 "" H 6505 4905 50  0000 C CNN
+	1    6505 4905
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6505 4730 6505 4805
+Wire Wire Line
+	6505 5005 6505 5145
+Connection ~ 6505 5145
+$Comp
+L SW_Push SW?
+U 1 1 5AD574E0
+P 6060 5145
+F 0 "SW?" H 6110 5245 50  0000 L CNN
+F 1 "SW_Push" H 6060 5085 50  0000 C CNN
+F 2 "" H 6060 5345 50  0001 C CNN
+F 3 "" H 6060 5345 50  0001 C CNN
+	1    6060 5145
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
