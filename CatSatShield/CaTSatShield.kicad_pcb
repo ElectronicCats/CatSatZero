@@ -18,10 +18,10 @@
   )
 
   (layers
-    (0 Top signal)
+    (0 Top signal hide)
     (1 LFSignals signal hide)
     (2 POWER signal hide)
-    (31 Bottom signal)
+    (31 Bottom signal hide)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
@@ -1175,7 +1175,7 @@
     (fp_text reference J3 (at -5.334 0.508 90) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.25)) (justify left bottom mirror))
     )
-    (fp_text value BME280 (at 5.08 2.52 90) (layer B.SilkS)
+    (fp_text value BME280 (at 2.774 -1.706 90) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.25)) (justify left bottom mirror))
     )
     (fp_line (start -5.08 -1.27) (end 5.08 -1.27) (layer B.SilkS) (width 0.127))
@@ -3513,7 +3513,7 @@
       (xy -8.236377 -5.397363) (xy -8.174627 -5.397401)) (layer B.Mask) (width 0.01))
   )
 
-  (gr_text "*Made on Earth \nby Humans*" (at 123.952 100.584 90) (layer F.SilkS)
+  (gr_text "*Designed \nin \nMexico*" (at 123.952 100.584 90) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (dimension 20.391081 (width 0.3) (layer Margin)
