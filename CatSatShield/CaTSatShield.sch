@@ -6,8 +6,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "CaTSatZero"
-Date "2018-08-08"
-Rev "v0.1-beta"
+Date "2018-08-21"
+Rev "v0.2-beta"
 Comp "Electronic Cats"
 Comment1 "Andres Sabas"
 Comment2 ""
@@ -217,9 +217,9 @@ F 3 "" H 5910 3125 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 5985 2360 0    50   ~ 0
-TX
-Text Label 4485 2360 2    50   ~ 0
 RX
+Text Label 4485 2360 2    50   ~ 0
+TX
 NoConn ~ 4640 2760
 NoConn ~ 5840 2460
 NoConn ~ 5840 2560
