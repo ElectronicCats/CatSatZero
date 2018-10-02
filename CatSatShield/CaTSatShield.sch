@@ -6,8 +6,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "CaTSatZero"
-Date "2018-08-21"
-Rev "v0.2-beta"
+Date "2018-10-01"
+Rev "v0.3"
 Comp "Electronic Cats"
 Comment1 "Andres Sabas"
 Comment2 ""
@@ -296,34 +296,12 @@ F 3 "" H 7915 2040 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7915 2040 8235 2040
-$Comp
-L power:VCC #PWR0102
-U 1 1 5B6B8274
-P 8010 1940
-F 0 "#PWR0102" H 8010 1790 50  0001 C CNN
-F 1 "VCC" H 8027 2113 50  0000 C CNN
-F 2 "" H 8010 1940 50  0001 C CNN
-F 3 "" H 8010 1940 50  0001 C CNN
-	1    8010 1940
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	10160 2295 9960 2295
 Wire Wire Line
 	10160 2395 9955 2395
 Wire Wire Line
 	10160 2095 9950 2095
-$Comp
-L power:VCC #PWR0103
-U 1 1 5B6B93E6
-P 9950 2095
-F 0 "#PWR0103" H 9950 1945 50  0001 C CNN
-F 1 "VCC" H 9967 2268 50  0000 C CNN
-F 2 "" H 9950 2095 50  0001 C CNN
-F 3 "" H 9950 2095 50  0001 C CNN
-	1    9950 2095
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:GND #PWR0104
 U 1 1 5B6B9425
@@ -369,4 +347,26 @@ A3
 Text Label 1530 2115 2    50   ~ 0
 A2
 NoConn ~ 4640 2460
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5BB2D67F
+P 8010 1940
+F 0 "#PWR?" H 8010 1790 50  0001 C CNN
+F 1 "+3.3V" H 8025 2113 50  0000 C CNN
+F 2 "" H 8010 1940 50  0001 C CNN
+F 3 "" H 8010 1940 50  0001 C CNN
+	1    8010 1940
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5BB2D707
+P 9950 2095
+F 0 "#PWR?" H 9950 1945 50  0001 C CNN
+F 1 "+3.3V" H 9965 2268 50  0000 C CNN
+F 2 "" H 9950 2095 50  0001 C CNN
+F 3 "" H 9950 2095 50  0001 C CNN
+	1    9950 2095
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
