@@ -72,9 +72,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 
 #define PIN_NOT_WAKE 5
 
-//TO DO: Verificar con modulo chino
-#define CCS811_ADDR 0x5B //Default I2C Address
-//#define CCS811_ADDR 0x5A //Alternate I2C Address
+#define CCS811_ADDR 0x5A //Alternate I2C Address
 
 //Command activation Balloon mode
 #define PMTK_SET_NMEA_886_PMTK_FR_MODE  "$PMTK001,886,3*36"
@@ -231,7 +229,9 @@ void setup() {
     Serial1.begin(9600);
     SerialUSB.println();
     SerialUSB.println("Settings...");
-
+    
+    pinMode(A6, OUTPUT);
+    digitalWrite(A6,LOW);
    /*
    * Activation Balloon mode: 
    * For high-altitude balloon purpose that the vertical movement will 
