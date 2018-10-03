@@ -261,7 +261,7 @@ void setup() {
 
   //For I2C, enable the following and disable the SPI section
   myBME280.settings.commInterface = I2C_MODE;
-  myBME280.settings.I2CAddress = 0x77;
+  myBME280.settings.I2CAddress = 0x76;
 
   //Initialize BME280
   //For I2C, enable the following and disable the SPI section
