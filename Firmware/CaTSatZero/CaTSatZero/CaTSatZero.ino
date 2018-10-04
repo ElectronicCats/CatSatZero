@@ -308,6 +308,11 @@ void loop() {
     //If the CCS811 found an internal error, print it.
     printSensorError();
   }
+
+  // read the input on analog pin 0:
+  int sensorValue = analogRead(ADC_BATTERY);
+  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 3.0V):
+  float voltage = sensorValue * (3.0 / 1023.0);
   
   gpsread();
  
@@ -380,6 +385,12 @@ void printInfoSerial()
   SerialUSB.print(myBME280.readFloatHumidity(), 2);
   SerialUSB.println(" %");
   Todo += myBME280.readFloatHumidity();
+  Todo += ","; 
+
+  // print out the value you read:
+  Serial.print(voltage);
+  Serial.println("V");
+  Todo += voltage;
   Todo += ","; 
 
   SerialUSB.println();
