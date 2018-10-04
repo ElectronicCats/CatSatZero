@@ -355,10 +355,6 @@ void printInfoSerial()
   Todo += myBME280.readTempC();
   Todo += ","; 
 
-  //SerialUSB.print(" Temperature: ");
-  //SerialUSB.print(myBME280.readTempF(), 2);
-  //SerialUSB.println(" degrees F");
-
   SerialUSB.print(" Pressure: ");
   SerialUSB.print(myBME280.readFloatPressure(), 2);
   SerialUSB.println(" Pa");
