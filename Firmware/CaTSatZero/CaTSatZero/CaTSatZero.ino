@@ -259,14 +259,10 @@ void setup() {
   printDriverError( returnCode );
   SerialUSB.println();
 
-  //For I2C, enable the following and disable the SPI section
-  myBME280.settings.commInterface = I2C_MODE;
-  myBME280.settings.I2CAddress = 0x76;
-
   //Initialize BME280
   //For I2C, enable the following and disable the SPI section
   myBME280.settings.commInterface = I2C_MODE;
-  myBME280.settings.I2CAddress = 0x77;
+  myBME280.settings.I2CAddress = 0x76;
   myBME280.settings.runMode = 3; //Normal mode
   myBME280.settings.tStandby = 0;
   myBME280.settings.filter = 4;
@@ -354,9 +350,9 @@ void printInfoSerial()
   Todo += myBME280.readTempC();
   Todo += ","; 
 
-  SerialUSB.print(" Temperature: ");
-  SerialUSB.print(myBME280.readTempF(), 2);
-  SerialUSB.println(" degrees F");
+  //SerialUSB.print(" Temperature: ");
+  //SerialUSB.print(myBME280.readTempF(), 2);
+  //SerialUSB.println(" degrees F");
 
   SerialUSB.print(" Pressure: ");
   SerialUSB.print(myBME280.readFloatPressure(), 2);
