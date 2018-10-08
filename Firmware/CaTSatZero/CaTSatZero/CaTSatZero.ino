@@ -104,6 +104,8 @@ byte localAddress = 0xBB;     // address of this device
 byte destination = 0xFF;      // destination to send to
 
 float voltage=0;
+
+void enviarInfo(String outgoing) {
   LoRa.beginPacket();                   // start packet
   LoRa.write(destination);              // add destination address
   LoRa.write(localAddress);             // add sender address
@@ -112,6 +114,7 @@ float voltage=0;
   LoRa.print(outgoing);                 // add payload
   LoRa.endPacket();                     // finish packet and send it
   msgCount++;                           // increment message ID
+  SerialUSB.println("Dato enviado");
 }
 
 void onReceive(int packetSize) {
@@ -313,22 +316,24 @@ void loop() {
   // read the input on analog pin 0:
   int sensorValue = analogRead(ADC_BATTERY);
   // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 3.0V):
-  float voltage = sensorValue * (3.0 / 1023.0);
+  voltage = sensorValue * (3.0 / 1023.0);
   
   gpsread();
  
-  if(gps_flag == 1)
+  /*if(gps_flag == 1)
   {
 
     Serial.println(Todo);
-    sendMessage(Todo);  
-  }
+    enviarInfo(Todo);  
+  }*/
+  Serial.println(Todo);
+  enviarInfo(Todo);
   Todo = "";
   delay(1000);  
   gps_flag = 0;
   
   // parse for a packet, and call onReceive with the result:
-  onReceive(LoRa.parsePacket());
+  //onReceive(LoRa.parsePacket());
 }
 
 void printInfoSerial()
