@@ -33,6 +33,7 @@ ENGLISH
 CatSat Zero
 CatSat - Satelite en Lata Educativo
 Andres Sabas @ Electronic Cats
+Eduardo Contreras @ Electronic Cats
 Original Creation Date: Agu 14, 2018
 https://github.com/ElectronicsCats/CatSatZero/
 
@@ -102,7 +103,7 @@ byte msgCount = 0;            // count of outgoing messages
 byte localAddress = 0xBB;     // address of this device
 byte destination = 0xFF;      // destination to send to
 
-void sendMessage(String outgoing) {
+float voltage=0;
   LoRa.beginPacket();                   // start packet
   LoRa.write(destination);              // add destination address
   LoRa.write(localAddress);             // add sender address
