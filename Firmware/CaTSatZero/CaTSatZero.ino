@@ -107,10 +107,10 @@ float voltage=0;
 
 void enviarInfo(String outgoing) {
   LoRa.beginPacket();                   // start packet
-  LoRa.write(destination);              // add destination address
-  LoRa.write(localAddress);             // add sender address
-  LoRa.write(msgCount);                 // add message ID
-  LoRa.write(outgoing.length());        // add payload length
+  //LoRa.write(destination);              // add destination address
+  //LoRa.write(localAddress);             // add sender address
+  //LoRa.write(msgCount);                 // add message ID
+  //LoRa.write(outgoing.length());        // add payload length
   LoRa.print(outgoing);                 // add payload
   LoRa.endPacket();                     // finish packet and send it
   msgCount++;                           // increment message ID
@@ -245,14 +245,15 @@ void setup() {
 
     /*****LoRa init****/
   // Defaults after init are 915.0MHz, modulation GFSK_Rb250Fd250, +13dbM
-  float chann = selectBand(channel);
+  double chann = selectBand(channel);
 
-  if (!LoRa.begin(channel)) {             // initialize ratio at 915 MHz
+  if (!LoRa.begin(915E6)) {             // initialize ratio at 915 MHz
     Serial.println("LoRa init failed. Check your connections.");
     while (true);                       // if failed, do nothing
   }
 
   LoRa.setTxPower(17); //Set the max transmition power
+  LoRa.setSpreadingFactor(10); //Change the SF to get longer distances
 
   /******************/
 
@@ -451,7 +452,7 @@ void printSensorError()
   }
 }
 
-float selectBand(int a)
+double selectBand(int a)
 {    
   switch(a){ 
     case 0:

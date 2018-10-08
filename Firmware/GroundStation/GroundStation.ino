@@ -79,6 +79,8 @@ void setup()
     Serial.println("Starting LoRa failed!");
     while (1);
   }
+  LoRa.setTxPower(17); //Set the max transmition power
+  LoRa.setSpreadingFactor(10); //Change the SF to get longer distances
 }
  
 void loop()
