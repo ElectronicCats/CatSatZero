@@ -166,7 +166,6 @@ void gpsread(void){
         Todo += String(gps.location.lat(), 6);
         Todo += ",";
         Todo += String(gps.location.lng(), 6);
-        Todo += "\n";
         SerialUSB.print(gps.location.lat(), 6);
         SerialUSB.print(F(","));
         SerialUSB.print(gps.location.lng(), 6);
@@ -177,7 +176,6 @@ void gpsread(void){
         Todo += "0";
         Todo += ",";
         Todo += "0";
-        Todo += "\n";
         SerialUSB.print(F("INVALID"));
         gps_flag = 1;
       }
@@ -247,7 +245,7 @@ void setup() {
   // Defaults after init are 915.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   double chann = selectBand(channel);
 
-  if (!LoRa.begin(915E6)) {             // initialize ratio at 915 MHz
+  if (!LoRa.begin(selectBand(channel))) {           // initialize ratio at 915 MHz
     Serial.println("LoRa init failed. Check your connections.");
     while (true);                       // if failed, do nothing
   }
@@ -452,7 +450,7 @@ void printSensorError()
   }
 }
 
-double selectBand(int a)
+long selectBand(int a)
 {    
   switch(a){ 
     case 0:
@@ -496,3 +494,4 @@ double selectBand(int a)
   break;
   }
 }
+
