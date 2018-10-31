@@ -315,10 +315,11 @@ void loop() {
     printSensorError();
   }
 
-  // read the input on analog pin 0:
+  // read the input on analog pin battery 
+  //NOTE: voltage max 1.18v in the pin of chip
   int sensorValue = analogRead(ADC_BATTERY);
-  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 3.0V):
-  voltage = sensorValue * (3.0 / 1023.0);
+  // Convert the analog reading (0 - 1.18v to 0 - 100%):
+  voltage = map(sensorValue,0,339,0,100);
   
   gpsread();
  
