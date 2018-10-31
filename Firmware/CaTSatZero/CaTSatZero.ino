@@ -232,6 +232,9 @@ void setup() {
     SerialUSB.println();
     SerialUSB.println("Settings...");
     
+    pinMode(LED_BUILTIN,OUTPUT);
+    digitalWrite(LED_BUILTIN,LOW);
+    
     pinMode(A6, OUTPUT);
     digitalWrite(A6,LOW);
    /*
@@ -328,11 +331,16 @@ void loop() {
   Serial.println(Todo);
   enviarInfo(Todo);
   Todo = "";
-  delay(1000);  
+  //delay(1000);
+  digitalWrite(LED_BUILTIN,HIGH); 
+  delay(500);
+  digitalWrite(LED_BUILTIN,LOW); 
+  delay(500); 
   gps_flag = 0;
   
   // parse for a packet, and call onReceive with the result:
   //onReceive(LoRa.parsePacket());
+  
 }
 
 void printInfoSerial()
