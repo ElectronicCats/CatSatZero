@@ -62,20 +62,25 @@ int channel = 12;
 
 String ID = "A1";
 
-float chann;
 String buff;
 
+const int csPin = 17;          // LoRa radio chip select
+const int resetPin = 16;       // LoRa radio reset
+const int irqPin = 4;         // change for your board; must be a hardware interrupt pin
  
 long selectBand(int);
  
 void setup() 
 {     
   Serial.begin(9600);
-  while (!Serial);
+  //while (!Serial);
 
   Serial.println("LoRa Receiver");
+  
+    // Sobrescribe los pines CS, reset, y IRQ 
+  LoRa.setPins(csPin, resetPin, irqPin); // CS, reset, int pin
 
-  if (!LoRa.begin(selectBand(12))) {
+  if (!LoRa.begin(selectBand(channel))) {
     Serial.println("Starting LoRa failed!");
     while (1);
   }
@@ -92,12 +97,13 @@ void loop()
     while (LoRa.available()) {
       //Serial.print(LoRa.available());
       buff+=(char)LoRa.read();
+      //Serial.write(LoRa.read());
     }
     buff+=",";
     buff+=String(LoRa.packetRssi());
-    if(buff.startsWith(ID)){
-          Serial.println(buff);
-          }
+    //if(buff.startsWith(ID)){
+    Serial.println(buff);
+      //    }
     buff="";
 
     digitalWrite(14,LOW);
@@ -148,4 +154,3 @@ long selectBand(int a)
   break;
   }
 }
-
