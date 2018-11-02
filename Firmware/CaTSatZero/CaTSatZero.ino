@@ -359,7 +359,7 @@ void printInfoSerial()
   SerialUSB.print(" TVOC concentration : ");
   SerialUSB.print(myCCS811.getTVOC());
   SerialUSB.println(" ppb");
-  Todo += myCCS811.getCO2();
+  Todo += myCCS811.getTVOC();
   Todo += ","; 
   
   SerialUSB.println("BME280 data:");
@@ -378,8 +378,8 @@ void printInfoSerial()
   SerialUSB.print(" Pressure: ");
   SerialUSB.print((myBME280.readFloatPressure() * 0.0002953), 2);
   SerialUSB.println(" InHg");
-  Todo += myCCS811.getCO2();
-  Todo += ","; 
+  //Todo += myCCS811.getCO2();
+  //Todo += ","; 
 
   SerialUSB.print(" Altitude: ");
   SerialUSB.print(myBME280.readFloatAltitudeMeters(), 2);
@@ -503,4 +503,3 @@ long selectBand(int a)
   break;
   }
 }
-
