@@ -323,14 +323,11 @@ void loop() {
   
   gpsread();
  
-  /*if(gps_flag == 1)
+  if(gps_flag == 1)
   {
-
     Serial.println(Todo);
-    enviarInfo(Todo);  
-  }*/
-  Serial.println(Todo);
-  enviarInfo(Todo);
+    enviarInfo(Todo); 
+  }
   Todo = "";
   digitalWrite(LED_BUILTIN,HIGH); 
   delay(500);
