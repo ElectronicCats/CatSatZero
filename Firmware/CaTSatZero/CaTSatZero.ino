@@ -332,11 +332,18 @@ void loop() {
   Serial.println(Todo);
   enviarInfo(Todo);
   Todo = "";
-  //delay(1000);
   digitalWrite(LED_BUILTIN,HIGH); 
   delay(500);
   digitalWrite(LED_BUILTIN,LOW); 
   delay(500); 
+  digitalWrite(LED_BUILTIN,HIGH); 
+  delay(500);
+  digitalWrite(LED_BUILTIN,LOW); 
+  delay(500); 
+  digitalWrite(LED_BUILTIN,HIGH); 
+  delay(500);
+  digitalWrite(LED_BUILTIN,LOW); 
+  delay(1500); 
   gps_flag = 0;
   
   // parse for a packet, and call onReceive with the result:
