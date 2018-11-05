@@ -107,52 +107,12 @@ float voltage=0;
 
 void enviarInfo(String outgoing) {
   LoRa.beginPacket();                   // start packet
-  //LoRa.write(destination);              // add destination address
-  //LoRa.write(localAddress);             // add sender address
-  //LoRa.write(msgCount);                 // add message ID
-  //LoRa.write(outgoing.length());        // add payload length
   LoRa.print(outgoing);                 // add payload
   LoRa.endPacket();                     // finish packet and send it
   msgCount++;                           // increment message ID
   SerialUSB.println("Dato enviado");
 }
 
-void onReceive(int packetSize) {
-  if (packetSize == 0) return;          // if there's no packet, return
-
-  // read packet header bytes:
-  int recipient = LoRa.read();          // recipient address
-  byte sender = LoRa.read();            // sender address
-  byte incomingMsgId = LoRa.read();     // incoming msg ID
-  byte incomingLength = LoRa.read();    // incoming msg length
-
-  String incoming = "";
-
-  while (LoRa.available()) {
-    incoming += (char)LoRa.read();
-  }
-
-  if (incomingLength != incoming.length()) {   // check length for error
-    Serial.println("error: message length does not match length");
-    return;                             // skip rest of function
-  }
-
-  // if the recipient isn't this device or broadcast,
-  if (recipient != localAddress && recipient != 0xFF) {
-    Serial.println("This message is not for me.");
-    return;                             // skip rest of function
-  }
-
-  // if message is for this device, or broadcast, print details:
-  Serial.println("Received from: 0x" + String(sender, HEX));
-  Serial.println("Sent to: 0x" + String(recipient, HEX));
-  Serial.println("Message ID: " + String(incomingMsgId));
-  Serial.println("Message length: " + String(incomingLength));
-  Serial.println("Message: " + incoming);
-  Serial.println("RSSI: " + String(LoRa.packetRssi()));
-  Serial.println("Snr: " + String(LoRa.packetSnr()));
-  Serial.println();
-}
 
 void gpsread(void){
   
@@ -245,8 +205,6 @@ void setup() {
   Serial.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
 
     /*****LoRa init****/
-  // Defaults after init are 915.0MHz, modulation GFSK_Rb250Fd250, +13dbM
-  double chann = selectBand(channel);
 
   if (!LoRa.begin(selectBand(channel))) {           // initialize ratio at 915 MHz
     Serial.println("LoRa init failed. Check your connections.");
@@ -363,7 +321,7 @@ void printInfoSerial()
   SerialUSB.print(" TVOC concentration : ");
   SerialUSB.print(myCCS811.getTVOC());
   SerialUSB.println(" ppb");
-  Todo += myCCS811.getCO2();
+  Todo += myCCS811.getTVOC();
   Todo += ","; 
   
   SerialUSB.println("BME280 data:");
@@ -382,8 +340,8 @@ void printInfoSerial()
   SerialUSB.print(" Pressure: ");
   SerialUSB.print((myBME280.readFloatPressure() * 0.0002953), 2);
   SerialUSB.println(" InHg");
-  Todo += myCCS811.getCO2();
-  Todo += ","; 
+  //Todo += myCCS811.getCO2();
+  //Todo += ","; 
 
   SerialUSB.print(" Altitude: ");
   SerialUSB.print(myBME280.readFloatAltitudeMeters(), 2);
@@ -507,4 +465,3 @@ long selectBand(int a)
   break;
   }
 }
-
