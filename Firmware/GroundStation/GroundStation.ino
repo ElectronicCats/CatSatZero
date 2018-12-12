@@ -64,9 +64,10 @@ String ID = "A1";
 
 String buff;
 
-const int csPin = 17;          // LoRa radio chip select
-const int resetPin = 16;       // LoRa radio reset
-const int irqPin = 4;         // change for your board; must be a hardware interrupt pin
+//For other device
+//const int csPin = 17;          // LoRa radio chip select
+//const int resetPin = 16;       // LoRa radio reset
+//const int irqPin = 4;         // change for your board; must be a hardware interrupt pin
  
 long selectBand(int);
  
@@ -77,8 +78,11 @@ void setup()
 
   Serial.println("LoRa Receiver");
   
-    // Sobrescribe los pines CS, reset, y IRQ 
-  LoRa.setPins(csPin, resetPin, irqPin); // CS, reset, int pin
+  //Re-write pins CS, reset, y IRQ 
+  //LoRa.setPins(csPin, resetPin, irqPin); // CS, reset, int pin
+  
+  //Re-write pins CS, reset, y IRQ for USBStick
+  LoRa.setPins(SS, RFM_RST, RFM_DIO0);
 
   if (!LoRa.begin(selectBand(channel))) {
     Serial.println("Starting LoRa failed!");
