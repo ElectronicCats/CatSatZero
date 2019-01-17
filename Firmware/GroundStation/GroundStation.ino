@@ -57,20 +57,24 @@ Distributed as-is; no warranty is given.
 #include <LoRa.h>
 
 
+/************************************************************
+*    IMPORTANTE CAMBIAR id_node DEPENDIENDO TU CANSAT      *
+************************************************************/
+
+String ID = "A1";
+
 /*******************************************************  
  *Selecciona un canal entre 0 y 12 este debe coincidir *
  *con el canal de tu satelite                          *
  *******************************************************/
 int channel = 12;
 
-String ID = "A1";
-
 String buff;
 
 //For other device
-//const int csPin = 17;          // LoRa radio chip select
-//const int resetPin = 16;       // LoRa radio reset
-//const int irqPin = 4;         // change for your board; must be a hardware interrupt pin
+#define RFM95_CS 10 
+#define RFM95_RST 9
+#define RFM95_INT 2
  
 long selectBand(int);
  
@@ -81,10 +85,10 @@ void setup()
 
   Serial.println("LoRa Receiver");
   
-  //Re-write pins CS, reset, y IRQ 
-  //LoRa.setPins(csPin, resetPin, irqPin); // CS, reset, int pin
+  //Re-write pins CS, reset, y IRQ for other device
+  //  LoRa.setPins(RFM95_CS, RFM95_RST, RFM95_INT); // CS, reset, int pin
   
-  //Re-write pins CS, reset, y IRQ for USBStick
+  //Re-write pins CS, reset, y IRQ for CatWAN USB Stick Electronic Cats
   LoRa.setPins(SS, RFM_RST, RFM_DIO0);
 
   if (!LoRa.begin(selectBand(channel))) {
@@ -102,15 +106,13 @@ void loop()
     digitalWrite(14,HIGH);
     // read packet
     while (LoRa.available()) {
-      //Serial.print(LoRa.available());
       buff+=(char)LoRa.read();
-      //Serial.write(LoRa.read());
     }
     buff+=",";
     buff+=String(LoRa.packetRssi());
-    //if(buff.startsWith(ID)){
-    Serial.println(buff);
-      //    }
+    if(buff.startsWith(ID)){
+      Serial.println(buff);
+    }
     buff="";
 
     digitalWrite(14,LOW);
