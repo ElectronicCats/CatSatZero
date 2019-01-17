@@ -14,7 +14,7 @@ http://electroniccats.com
 Especificaciones del entorno de Desarrollo:
   IDE: Arduino 1.8.4
   Plataforma de Hardware:
-  Estacion terrena CanSat
+  Estacion terrena CanSat Zero
   - USB Stick CatWAN
 
 Este código es beerware si tu me ves ( o cualquier otro miembro de Electronic Cats) 
@@ -27,17 +27,20 @@ Distribuido como; no se da ninguna garantía.
 /************************************************************
 ENGLISH
 Ground Station
-Ground Statios - Earth-Station for CatSat
+Ground Station - Ground-Station for CatSat
 Eduardo contreras @ Electronic Cats
 Original Creation Date: Oct 8, 2018
 https://github.com/ElectronicCats/CatSatZero
 
-This example demonstrates how to use the earth-station for CatSat
+
+http://electroniccats.com
+
+This example demonstrates how to use the ground-station for CatSat
 
 Development environment specifics:
-  IDE: Arduino 1.6.8
+  IDE: Arduino 1.8.4
   Hardware Platform:
-  Kit CanSat
+  Kit CanSat Zero
   - USB Stick CatWAN
   
 
