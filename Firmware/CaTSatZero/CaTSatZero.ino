@@ -202,7 +202,7 @@ void setup() {
    * For high-altitude balloon purpose that the vertical movement will 
    * have more effect on the position calculation
   */
-  Serial.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
+  Serial1.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
 
     /*****LoRa init****/
 
