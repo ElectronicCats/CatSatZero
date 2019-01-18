@@ -73,7 +73,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 
 #define PIN_NOT_WAKE 5
 
-#define CCS811_ADDR 0x5A //Alternate I2C Address
+#define CCS811_ADDR 0x5A //0x5B Alternate I2C Address
 
 //Command activation Balloon mode
 #define PMTK_SET_NMEA_886_PMTK_FR_MODE  "$PMTK001,886,3*36"
