@@ -148,10 +148,11 @@ void gpsread(void){
         SerialUSB.print(gps.date.day());
         SerialUSB.print(F("/"));
         SerialUSB.print(gps.date.year());
+        SerialUSB.print(" ");
       }
       else
       {
-        SerialUSB.print(F("INVALID"));
+        SerialUSB.print(F("INVALID "));
       }
 
       SerialUSB.print(F(""));
@@ -171,7 +172,7 @@ void gpsread(void){
       }
       else
       {
-        SerialUSB.print(F("INVALID"));
+        SerialUSB.print(F("INVALID "));
       }
 
       SerialUSB.println(); 
