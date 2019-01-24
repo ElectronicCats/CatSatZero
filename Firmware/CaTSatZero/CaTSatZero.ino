@@ -54,9 +54,6 @@ please buy us a round!
 
 Distributed as-is; no warranty is given.
 
-Library TinyGPS++
-https://github.com/mikalhart/TinyGPSPlus
-
 Library Arduino LoRa
 https://github.com/sandeepmistry/arduino-LoRa
 
@@ -65,13 +62,13 @@ https://github.com/sandeepmistry/arduino-LoRa
 #include <SPI.h>
 #include <LoRa.h>
 
-#include <TinyGPS++.h>
+#include <MPU6050.h>
+
+#include <NMEAGPS.h>
 
 #include <Wire.h>
 #include <SparkFunBME280.h>
 #include <SparkFunCCS811.h>
-
-#define PIN_NOT_WAKE 5
 
 #define CCS811_ADDR 0x5A //0x5B Alternate I2C Address
 
@@ -82,7 +79,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 CCS811 myCCS811(CCS811_ADDR);
 BME280 myBME280;
 
-TinyGPSPlus gps;
+NMEAGPS gps;
 int gps_flag = 0;
 
 String Todo; //String a mandar
@@ -116,19 +113,18 @@ void enviarInfo(String outgoing) {
 
 void gpsread(void){
   
-  // 
   while ((Serial1.available() > 0) && (gps_flag == 0))
-    if (gps.encode(Serial1.read()))
-    {
+     {
+     gps_fix fix = gps.read();
      SerialUSB.print(F("Location: ")); 
-      if (gps.location.isValid())
+      if (fix.valid.location)
       { 
-        Todo += String(gps.location.lat(), 6);
+        Todo += String(fix.latitude(), 6);
         Todo += ",";
-        Todo += String(gps.location.lng(), 6);
-        SerialUSB.print(gps.location.lat(), 6);
+        Todo += String(fix.longitude(), 6);
+        SerialUSB.print(fix.latitude(), 6);
         SerialUSB.print(F(","));
-        SerialUSB.print(gps.location.lng(), 6);
+        SerialUSB.print(fix.longitude(), 6);
         gps_flag = 1;
       }
       else
@@ -141,13 +137,13 @@ void gpsread(void){
       }
 
       SerialUSB.print(F("  Date/Time: "));
-      if (gps.date.isValid())
+      if (fix.valid.date)
       {
-        SerialUSB.print(gps.date.month());
+        SerialUSB.print(fix.dateTime.month);
         SerialUSB.print(F("/"));
-        SerialUSB.print(gps.date.day());
+        SerialUSB.print(fix.dateTime.day);
         SerialUSB.print(F("/"));
-        SerialUSB.print(gps.date.year());
+        SerialUSB.print(fix.dateTime.year);
         SerialUSB.print(" ");
       }
       else
@@ -156,19 +152,17 @@ void gpsread(void){
       }
 
       SerialUSB.print(F(""));
-      if (gps.time.isValid())
+      if (fix.valid.date)
       {
-        if (gps.time.hour() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.hour());
+        if (fix.dateTime.hours < 10) SerialUSB.print(F("0"));
+        SerialUSB.print(fix.dateTime.hours);
         SerialUSB.print(F(":"));
-      if (gps.time.minute() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.minute());
+      if (fix.dateTime.minutes < 10) SerialUSB.print(F("0"));
+        SerialUSB.print(fix.dateTime.minutes);
         SerialUSB.print(F(":"));
-      if (gps.time.second() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.second());
+      if (fix.dateTime.seconds < 10) SerialUSB.print(F("0"));
+        SerialUSB.print(fix.dateTime.seconds);
         SerialUSB.print(F("."));
-      if (gps.time.centisecond() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.centisecond());
       }
       else
       {
@@ -177,14 +171,6 @@ void gpsread(void){
 
       SerialUSB.println(); 
      }
-      
-
-      if (millis() > 5000 && gps.charsProcessed() < 10)
-      {
-        SerialUSB.println(F("No GPS detected: check wiring."));
-        while(true);
-      }
-  
 }
 
 void setup() {
