@@ -83,7 +83,6 @@ CCS811 myCCS811(CCS811_ADDR);
 BME280 myBME280;
 
 static NMEAGPS gps;
-int gps_flag = 0;
 static gps_fix  fix;
 
 String Todo; //String a mandar
