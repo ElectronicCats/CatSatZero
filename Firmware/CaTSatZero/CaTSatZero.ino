@@ -58,6 +58,8 @@ Library Arduino LoRa
 https://github.com/sandeepmistry/arduino-LoRa
 
 */
+//Uncomment for debug
+//#define DEBUG
 
 #include <SPI.h>
 #include <LoRa.h>
