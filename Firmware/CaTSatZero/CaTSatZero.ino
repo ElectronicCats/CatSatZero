@@ -186,8 +186,8 @@ void setup() {
   pinMode(LED_BUILTIN,OUTPUT);
   digitalWrite(LED_BUILTIN,LOW);
     
-  pinMode(A6, OUTPUT); //Enable CCS811
-  digitalWrite(A6,LOW);
+  pinMode(A6, OUTPUT); //Wakeup pin CCS811
+  digitalWrite(A6,LOW);//Enable CCS811
 
   /*****LoRa init****/
 
