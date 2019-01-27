@@ -225,13 +225,16 @@ void setup() {
 
   SerialUSB.println("CaTSat Zero Ready!");
 
-   /*
-   * Activation Balloon mode: 
-   * For high-altitude balloon purpose that the vertical movement will 
-   * have more effect on the position calculation
+  /*
+  * Activation Balloon mode: 
+  * For high-altitude balloon purpose that the vertical movement will 
+  * have more effect on the position calculation
   */
   gpsPort.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
+  
+  //Command turn on GPRMC and GGA
   gpsPort.println(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  
   gpsPort.begin(9600);
 }
 
