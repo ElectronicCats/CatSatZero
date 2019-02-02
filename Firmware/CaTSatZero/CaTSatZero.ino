@@ -54,36 +54,38 @@ please buy us a round!
 
 Distributed as-is; no warranty is given.
 
-Library TinyGPS++
-https://github.com/mikalhart/TinyGPSPlus
-
 Library Arduino LoRa
 https://github.com/sandeepmistry/arduino-LoRa
 
 */
+//Uncomment for debug
+//#define DEBUG
 
 #include <SPI.h>
 #include <LoRa.h>
 
-#include <TinyGPS++.h>
+#include <MPU6050.h>
+
+#include <NMEAGPS.h>
+#include <GPSport.h>
 
 #include <Wire.h>
 #include <SparkFunBME280.h>
 #include <SparkFunCCS811.h>
 
-#define PIN_NOT_WAKE 5
-
 #define CCS811_ADDR 0x5A //0x5B Alternate I2C Address
 
 //Command activation Balloon mode
 #define PMTK_SET_NMEA_886_PMTK_FR_MODE  "$PMTK001,886,3*36"
+// Command turn on GPRMC and GGA
+#define PMTK_SET_NMEA_OUTPUT_RMCGGA "$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28"
 
 //Global sensor objects
 CCS811 myCCS811(CCS811_ADDR);
 BME280 myBME280;
 
-TinyGPSPlus gps;
-int gps_flag = 0;
+static NMEAGPS gps;
+static gps_fix  fix;
 
 String Todo; //String a mandar
 
@@ -110,44 +112,43 @@ void enviarInfo(String outgoing) {
   LoRa.print(outgoing);                 // add payload
   LoRa.endPacket();                     // finish packet and send it
   msgCount++;                           // increment message ID
+  #ifdef DEBUG
   SerialUSB.println("Dato enviado");
+  #endif
 }
 
 
 void gpsread(void){
-  
-  // 
-  while ((Serial1.available() > 0) && (gps_flag == 0))
-    if (gps.encode(Serial1.read()))
-    {
-     SerialUSB.print(F("Location: ")); 
-      if (gps.location.isValid())
-      { 
-        Todo += String(gps.location.lat(), 6);
-        Todo += ",";
-        Todo += String(gps.location.lng(), 6);
-        SerialUSB.print(gps.location.lat(), 6);
-        SerialUSB.print(F(","));
-        SerialUSB.print(gps.location.lng(), 6);
-        gps_flag = 1;
-      }
-      else
-      { 
+  SerialUSB.print("Location: "); 
+    if (fix.valid.location)
+    { 
+      Todo += String(fix.latitude(),6);
+      Todo += ",";
+      Todo += String(fix.longitude(),6);
+      #ifdef DEBUG
+      SerialUSB.print(fix.latitude(), 6);
+      SerialUSB.print(F(","));
+      SerialUSB.print(fix.longitude(), 6);
+      #endif
+     }
+     else
+     { 
         Todo += "0";
         Todo += ",";
         Todo += "0";
-        SerialUSB.print(F("INVALID"));
-        gps_flag = 1;
+        #ifdef DEBUG
+        SerialUSB.print("INVALID");
+        #endif
       }
-
-      SerialUSB.print(F("  Date/Time: "));
-      if (gps.date.isValid())
+      #ifdef DEBUG
+      SerialUSB.print("  Date/Time: ");
+      if (fix.valid.date)
       {
-        SerialUSB.print(gps.date.month());
-        SerialUSB.print(F("/"));
-        SerialUSB.print(gps.date.day());
-        SerialUSB.print(F("/"));
-        SerialUSB.print(gps.date.year());
+        SerialUSB.print(fix.dateTime.month);
+        SerialUSB.print("/");
+        SerialUSB.print(fix.dateTime.day);
+        SerialUSB.print("/");
+        SerialUSB.print(fix.dateTime.year);
         SerialUSB.print(" ");
       }
       else
@@ -155,61 +156,44 @@ void gpsread(void){
         SerialUSB.print(F("INVALID "));
       }
 
-      SerialUSB.print(F(""));
-      if (gps.time.isValid())
+      SerialUSB.print("");
+      if (fix.valid.date)
       {
-        if (gps.time.hour() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.hour());
-        SerialUSB.print(F(":"));
-      if (gps.time.minute() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.minute());
-        SerialUSB.print(F(":"));
-      if (gps.time.second() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.second());
-        SerialUSB.print(F("."));
-      if (gps.time.centisecond() < 10) SerialUSB.print(F("0"));
-        SerialUSB.print(gps.time.centisecond());
+        if (fix.dateTime.hours < 10) SerialUSB.print(F("0"));
+        SerialUSB.print(fix.dateTime.hours);
+        SerialUSB.print(":");
+      if (fix.dateTime.minutes < 10) SerialUSB.print(F("0"));
+        SerialUSB.print(fix.dateTime.minutes);
+        SerialUSB.print(":");
+      if (fix.dateTime.seconds < 10) SerialUSB.print(F("0"));
+        SerialUSB.print(fix.dateTime.seconds);
+        SerialUSB.print(".");
       }
       else
       {
-        SerialUSB.print(F("INVALID "));
+        SerialUSB.print("INVALID ");
       }
+      SerialUSB.println();
+      #endif 
 
-      SerialUSB.println(); 
-     }
-      
-
-      if (millis() > 5000 && gps.charsProcessed() < 10)
-      {
-        SerialUSB.println(F("No GPS detected: check wiring."));
-        while(true);
-      }
-  
 }
 
 void setup() {
-    SerialUSB.begin(9600);
-    Serial1.begin(9600);
-    SerialUSB.println();
-    SerialUSB.println("Settings...");
+  SerialUSB.begin(9600);
+  SerialUSB.println();
+  SerialUSB.println("Settings...");
     
-    pinMode(LED_BUILTIN,OUTPUT);
-    digitalWrite(LED_BUILTIN,LOW);
+  pinMode(LED_BUILTIN,OUTPUT);
+  digitalWrite(LED_BUILTIN,LOW);
     
-    pinMode(A6, OUTPUT); //Enable CCS811
-    digitalWrite(A6,LOW);
-   /*
-   * Activation Balloon mode: 
-   * For high-altitude balloon purpose that the vertical movement will 
-   * have more effect on the position calculation
-  */
-  Serial1.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
+  pinMode(A6, OUTPUT); //Wakeup pin CCS811
+  digitalWrite(A6,LOW);//Enable CCS811
 
-    /*****LoRa init****/
+  /*****LoRa init****/
 
   if (!LoRa.begin(selectBand(channel))) {           // initialize ratio at 915 MHz
     Serial.println("LoRa init failed. Check your connections.");
-    while (true);                       // if failed, do nothing
+      while (true);                       // if failed, do nothing
   }
 
   LoRa.setTxPower(17); //Set the max transmition power
@@ -217,7 +201,7 @@ void setup() {
 
   /******************/
 
-      //This begins the CCS811 sensor and prints error status of .begin()
+  //This begins the CCS811 sensor and prints error status of .begin()
   CCS811Core::status returnCode = myCCS811.begin();
   SerialUSB.print("CCS811 begin exited with: ");
   //Pass the error code to a function to print the results
@@ -241,6 +225,17 @@ void setup() {
 
   SerialUSB.println("CaTSat Zero Ready!");
 
+  /*
+  * Activation Balloon mode: 
+  * For high-altitude balloon purpose that the vertical movement will 
+  * have more effect on the position calculation
+  */
+  gpsPort.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
+  
+  //Command turn on GPRMC and GGA
+  gpsPort.println(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  
+  gpsPort.begin(9600);
 }
 
 void loop() {
@@ -248,59 +243,60 @@ void loop() {
   Todo += id_node;  //Add id to String 
   Todo += ",";
   
-  //Check to see if data is available
-  if (myCCS811.dataAvailable())
-  {
-    //Calling this function updates the global tVOC and eCO2 variables
-    myCCS811.readAlgorithmResults();
-    //printInfoSerial fetches the values of tVOC and eCO2
-    printInfoSerial();
+  while (gps.available( gpsPort )) {
+    fix = gps.read();
+    //Check to see if data is available
+    if (myCCS811.dataAvailable())
+    {
+      //Calling this function updates the global tVOC and eCO2 variables
+      myCCS811.readAlgorithmResults();
+      //printInfoSerial fetches the values of tVOC and eCO2
+      printInfoSerial();
 
-    float BMEtempC = myBME280.readTempC();
-    float BMEhumid = myBME280.readFloatHumidity();
+      float BMEtempC = myBME280.readTempC();
+      float BMEhumid = myBME280.readFloatHumidity();
+    
+      #ifdef DEBUG
+      SerialUSB.print("Applying new values (deg C, %): ");
+      SerialUSB.print(BMEtempC);
+      SerialUSB.print(",");
+      SerialUSB.println(BMEhumid);
+      SerialUSB.println();
+      #endif
+      //This sends the temperature data to the CCS811
+      myCCS811.setEnvironmentalData(BMEhumid, BMEtempC);
+    }
+    else if (myCCS811.checkForStatusError())
+    {
+      //If the CCS811 found an internal error, print it.
+      printSensorError();
+    }
 
-    SerialUSB.print("Applying new values (deg C, %): ");
-    SerialUSB.print(BMEtempC);
-    SerialUSB.print(",");
-    SerialUSB.println(BMEhumid);
-    SerialUSB.println();
-
-    //This sends the temperature data to the CCS811
-    myCCS811.setEnvironmentalData(BMEhumid, BMEtempC);
-  }
-  else if (myCCS811.checkForStatusError())
-  {
-    //If the CCS811 found an internal error, print it.
-    printSensorError();
-  }
-
-  // read the input on analog pin battery 
-  //NOTE: voltage max 1.18v in the pin of chip
-  int sensorValue = analogRead(ADC_BATTERY);
-  // Convert the analog reading (0 - 1.18v to 0 - 100%):
-  voltage = map(sensorValue,0,339,0,100);
+    // read the input on analog pin battery 
+    //NOTE: voltage max 1.18v in the pin of chip
+    int sensorValue = analogRead(ADC_BATTERY);
+    // Convert the analog reading (0 - 1.18v to 0 - 100%):
+    voltage = map(sensorValue,0,339,0,100);
   
-  gpsread();
- 
-  if(gps_flag == 1)
-  {
+    gpsread();
+    
     Serial.println(Todo);
-    enviarInfo(Todo); 
-  }
-  Todo = "";
-  digitalWrite(LED_BUILTIN,HIGH); 
-  delay(500);
-  digitalWrite(LED_BUILTIN,LOW); 
-  delay(500); 
-  digitalWrite(LED_BUILTIN,HIGH); 
-  delay(500);
-  digitalWrite(LED_BUILTIN,LOW); 
-  delay(500); 
-  digitalWrite(LED_BUILTIN,HIGH); 
-  delay(500);
-  digitalWrite(LED_BUILTIN,LOW); 
-  delay(1500); 
-  gps_flag = 0;
+    enviarInfo(Todo);  
+    digitalWrite(LED_BUILTIN,HIGH); 
+    delay(500);
+    digitalWrite(LED_BUILTIN,LOW); 
+    delay(500); 
+    digitalWrite(LED_BUILTIN,HIGH); 
+    delay(500);
+    digitalWrite(LED_BUILTIN,LOW); 
+    delay(500); 
+    digitalWrite(LED_BUILTIN,HIGH); 
+    delay(500);
+    digitalWrite(LED_BUILTIN,LOW); 
+    delay(500); 
+    }
+  
+    Todo = "";
   
   // parse for a packet, and call onReceive with the result:
   //onReceive(LoRa.parsePacket());
@@ -309,47 +305,60 @@ void loop() {
 
 void printInfoSerial()
 {
+  #ifdef DEBUG
   //getCO2() gets the previously read data from the library
   SerialUSB.println("CCS811 data:");
   SerialUSB.print(" CO2 concentration : ");
   SerialUSB.print(myCCS811.getCO2());
   SerialUSB.println(" ppm");
+  #endif
   Todo += myCCS811.getCO2();
   Todo += ","; 
   
 
   //getTVOC() gets the previously read data from the library
+  #ifdef DEBUG
   SerialUSB.print(" TVOC concentration : ");
   SerialUSB.print(myCCS811.getTVOC());
   SerialUSB.println(" ppb");
+  #endif
   Todo += myCCS811.getTVOC();
   Todo += ","; 
-  
+
+  #ifdef DEBUG
   SerialUSB.println("BME280 data:");
   SerialUSB.print(" Temperature: ");
   SerialUSB.print(myBME280.readTempC(), 2);
   SerialUSB.println(" degrees C");
+  #endif
   Todo += myBME280.readTempC();
   Todo += ","; 
 
+  #ifdef DEBUG
   SerialUSB.print(" Pressure: ");
   SerialUSB.print(myBME280.readFloatPressure(), 2);
   SerialUSB.println(" Pa");
+  #endif
   Todo += myBME280.readFloatPressure();
   Todo += ",";  
 
+  #ifdef DEBUG
   SerialUSB.print(" Pressure: ");
   SerialUSB.print((myBME280.readFloatPressure() * 0.0002953), 2);
   SerialUSB.println(" InHg");
-  //Todo += myCCS811.getCO2();
-  //Todo += ","; 
+  #endif
+  Todo += myCCS811.getCO2();
+  Todo += ","; 
 
+  #ifdef DEBUG
   SerialUSB.print(" Altitude: ");
   SerialUSB.print(myBME280.readFloatAltitudeMeters(), 2);
   SerialUSB.println("m");
+  #endif
   Todo += myBME280.readFloatAltitudeMeters();
   Todo += ","; 
-  
+
+  #ifdef DEBUG
   SerialUSB.print(" Altitude: ");
   SerialUSB.print(myBME280.readFloatAltitudeFeet(), 2);
   SerialUSB.println("ft");
@@ -357,12 +366,15 @@ void printInfoSerial()
   SerialUSB.print(" %RH: ");
   SerialUSB.print(myBME280.readFloatHumidity(), 2);
   SerialUSB.println(" %");
+  #endif
   Todo += myBME280.readFloatHumidity();
   Todo += ","; 
 
   // print out the value you read:
+  #ifdef DEBUG
   Serial.print(voltage);
   Serial.println("V");
+  #endif
   Todo += voltage;
   Todo += ","; 
 
