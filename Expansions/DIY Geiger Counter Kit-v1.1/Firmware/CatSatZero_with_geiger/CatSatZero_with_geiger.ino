@@ -227,7 +227,7 @@ void tube_impulse(){       //subprocedure for capturing events from Geiger Kit
 }
 
 void setup(){
-    SerialUSB.begin(9600);
+  SerialUSB.begin(9600);
   SerialUSB.println();
   SerialUSB.println("Settings...");
     
@@ -437,6 +437,9 @@ void printInfoSerial()
   Serial.println("V");
   #endif
   Todo += voltage;
+  Todo += ","; 
+
+  Todo += radiationValue;
   Todo += ","; 
 
   SerialUSB.println();
