@@ -347,8 +347,6 @@ void printInfoSerial()
   SerialUSB.print((myBME280.readFloatPressure() * 0.0002953), 2);
   SerialUSB.println(" InHg");
   #endif
-  Todo += myCCS811.getCO2();
-  Todo += ","; 
 
   #ifdef DEBUG
   SerialUSB.print(" Altitude: ");
