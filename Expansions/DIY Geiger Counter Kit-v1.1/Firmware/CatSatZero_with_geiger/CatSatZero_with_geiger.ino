@@ -157,28 +157,32 @@ void enviarInfo(String outgoing) {
 }
 
 void gpsread(void){
-  SerialUSB.print("Location: "); 
-    if (fix.valid.location)
-    { 
-      Todo += String(fix.latitude(),6);
-      Todo += ",";
-      Todo += String(fix.longitude(),6);
-      #ifdef DEBUG
-      SerialUSB.print(fix.latitude(), 6);
-      SerialUSB.print(F(","));
-      SerialUSB.print(fix.longitude(), 6);
-      #endif
-     }
-     else
-     { 
+     SerialUSB.print("Location: "); 
+      if (fix.valid.location)
+      { 
+        Todo += String(fix.latitude(), 6);
+        Todo += ",";
+        Todo += String(fix.longitude(), 6);
+        Todo += ",";
+        Todo += String(fix.altitude(), 6);
+        Todo += ",";
+        Todo += String(fix.speed_kph(), 6);
+        SerialUSB.print(fix.latitude(), 6);
+        SerialUSB.print(F(","));
+        SerialUSB.print(fix.longitude(), 6);
+      }
+      else
+      { 
         Todo += "0";
         Todo += ",";
         Todo += "0";
-        #ifdef DEBUG
+        Todo += ",";
+        Todo += "0";
+        Todo += ",";
+        Todo += "0";
         SerialUSB.print("INVALID");
-        #endif
       }
-      #ifdef DEBUG
+
       SerialUSB.print("  Date/Time: ");
       if (fix.valid.date)
       {
@@ -187,33 +191,31 @@ void gpsread(void){
         SerialUSB.print(fix.dateTime.day);
         SerialUSB.print("/");
         SerialUSB.print(fix.dateTime.year);
-        SerialUSB.print(" ");
       }
       else
       {
-        SerialUSB.print(F("INVALID "));
+        SerialUSB.print("INVALID");
       }
 
       SerialUSB.print("");
       if (fix.valid.date)
       {
-        if (fix.dateTime.hours < 10) SerialUSB.print(F("0"));
+        if (fix.dateTime.hours < 10) SerialUSB.print("0");
         SerialUSB.print(fix.dateTime.hours);
         SerialUSB.print(":");
-      if (fix.dateTime.minutes < 10) SerialUSB.print(F("0"));
+      if (fix.dateTime.minutes < 10) SerialUSB.print("0");
         SerialUSB.print(fix.dateTime.minutes);
         SerialUSB.print(":");
-      if (fix.dateTime.seconds < 10) SerialUSB.print(F("0"));
+      if (fix.dateTime.seconds < 10) SerialUSB.print("0");
         SerialUSB.print(fix.dateTime.seconds);
         SerialUSB.print(".");
       }
       else
       {
-        SerialUSB.print("INVALID ");
+        SerialUSB.print("INVALID");
       }
-      SerialUSB.println();
-      #endif 
 
+      SerialUSB.println(); 
 }
 
 void tube_impulse(){       //subprocedure for capturing events from Geiger Kit
@@ -537,8 +539,3 @@ long selectBand(int a)
   break;
   }
 }
-
-
-
-
-
