@@ -1,0 +1,22 @@
+The Raw output is order as
+
+CCS811
+CO2, TVOC
+
+BMP280
+temperature, pressure, AltitudeMeters, relative_humidity 
+
+Board
+voltage
+
+Geiger
+CPM
+
+GPS
+lat,long,alt:gps,speed
+
+Module LoRa
+RSSI 
+
+A1,CO2,TVOC,temp,Pressure,AltitudeMeters,Humidity,voltage,radiationValue,lat,long,altitude_gps,speed,RSSI
+example: A1,551,23,23.98,94351.46,551,597.37,29.21,2.00,19.00,23.2345,-102.9870,550,-80
