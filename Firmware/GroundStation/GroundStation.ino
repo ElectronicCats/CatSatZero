@@ -82,6 +82,7 @@ void setup()
 {     
   Serial.begin(9600);
   while (!Serial);
+  pinMode(LED_BUILTIN,OUTPUT);
 
   Serial.println("LoRa Receiver");
   
@@ -103,7 +104,7 @@ void loop()
 {
   int packetSize = LoRa.parsePacket();
   if (packetSize) {
-    digitalWrite(14,HIGH);
+    digitalWrite(LED_BUILTIN,HIGH);
     // read packet
     while (LoRa.available()) {
       buff+=(char)LoRa.read();
@@ -115,7 +116,7 @@ void loop()
     }
     buff="";
 
-    digitalWrite(14,LOW);
+    digitalWrite(LED_BUILTIN,LOW);
   }
 }
 
