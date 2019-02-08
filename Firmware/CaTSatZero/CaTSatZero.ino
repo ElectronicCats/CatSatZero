@@ -349,12 +349,6 @@ void printInfoSerial()
   Todo += ",";  
 
   #ifdef DEBUG
-  SerialUSB.print(" Pressure: ");
-  SerialUSB.print((myBME280.readFloatPressure() * 0.0002953), 2);
-  SerialUSB.println(" InHg");
-  #endif
-
-  #ifdef DEBUG
   SerialUSB.print(" Altitude: ");
   SerialUSB.print(myBME280.readFloatAltitudeMeters(), 2);
   SerialUSB.println("m");
@@ -363,10 +357,6 @@ void printInfoSerial()
   Todo += ","; 
 
   #ifdef DEBUG
-  SerialUSB.print(" Altitude: ");
-  SerialUSB.print(myBME280.readFloatAltitudeFeet(), 2);
-  SerialUSB.println("ft");
-
   SerialUSB.print(" %RH: ");
   SerialUSB.print(myBME280.readFloatHumidity(), 2);
   SerialUSB.println(" %");
@@ -383,7 +373,6 @@ void printInfoSerial()
   Todo += ","; 
 
   SerialUSB.println();
-
 }
 
 //printDriverError decodes the CCS811Core::status type and prints the
