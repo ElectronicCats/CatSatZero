@@ -59,7 +59,8 @@ https://github.com/sandeepmistry/arduino-LoRa
 
 */
 //Uncomment for debug
-//#define DEBUG
+#define DEBUG
+#define DEBUG2
 
 #include <SPI.h>
 #include <LoRa.h>
@@ -178,6 +179,9 @@ void gpsread(void){
 
 void setup() {
   SerialUSB.begin(9600);
+  #ifdef DEBUG2
+  while (!Serial);
+  #endif 
   SerialUSB.println();
   SerialUSB.println("Settings...");
     
