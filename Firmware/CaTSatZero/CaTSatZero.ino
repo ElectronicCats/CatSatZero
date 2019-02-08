@@ -64,8 +64,6 @@ https://github.com/sandeepmistry/arduino-LoRa
 #include <SPI.h>
 #include <LoRa.h>
 
-#include <MPU6050.h>
-
 #include <NMEAGPS.h>
 #include <GPSport.h>
 
