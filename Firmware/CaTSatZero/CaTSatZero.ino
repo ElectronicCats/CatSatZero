@@ -151,19 +151,19 @@ void gpsread(void){
       }
       else
       {
-        SerialUSB.print(F("INVALID "));
+        SerialUSB.print("INVALID ");
       }
 
       SerialUSB.print("");
       if (fix.valid.date)
       {
-        if (fix.dateTime.hours < 10) SerialUSB.print(F("0"));
+        if (fix.dateTime.hours < 10) SerialUSB.print("0");
         SerialUSB.print(fix.dateTime.hours);
         SerialUSB.print(":");
-      if (fix.dateTime.minutes < 10) SerialUSB.print(F("0"));
+      if (fix.dateTime.minutes < 10) SerialUSB.print("0");
         SerialUSB.print(fix.dateTime.minutes);
         SerialUSB.print(":");
-      if (fix.dateTime.seconds < 10) SerialUSB.print(F("0"));
+      if (fix.dateTime.seconds < 10) SerialUSB.print("0");
         SerialUSB.print(fix.dateTime.seconds);
         SerialUSB.print(".");
       }
