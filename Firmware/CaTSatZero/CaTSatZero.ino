@@ -219,7 +219,11 @@ void setup() {
 
   //Calling .begin() causes the settings to be loaded
   delay(10);  //Make sure sensor had enough time to turn on. BME280 requires 2ms to start up.
-  myBME280.begin();
+  int status280 = myBME280.begin();
+  if (status280 != 0x60) {
+    Serial.println("Could not find a valid BME280 sensor, check wiring!");
+     while (1);
+   }
 
   SerialUSB.println("CaTSat Zero Ready!");
 
