@@ -396,22 +396,32 @@ void printDriverError( CCS811Core::status errorCode )
   switch ( errorCode )
   {
     case CCS811Core::SENSOR_SUCCESS:
-      SerialUSB.print("SUCCESS");
+      SerialUSB.println("SUCCESS");
       break;
     case CCS811Core::SENSOR_ID_ERROR:
-      SerialUSB.print("ID_ERROR");
+      SerialUSB.println("ID_ERROR");
+      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
+      while (1);
       break;
     case CCS811Core::SENSOR_I2C_ERROR:
-      SerialUSB.print("I2C_ERROR");
+      SerialUSB.println("I2C_ERROR");
+      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
+      while (1);
       break;
     case CCS811Core::SENSOR_INTERNAL_ERROR:
-      SerialUSB.print("INTERNAL_ERROR");
+      SerialUSB.println("INTERNAL_ERROR");
+      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
+      while (1);
       break;
     case CCS811Core::SENSOR_GENERIC_ERROR:
-      SerialUSB.print("GENERIC_ERROR");
+      SerialUSB.println("GENERIC_ERROR");
+      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
+      while (1);
       break;
     default:
-      SerialUSB.print("Unspecified error.");
+      SerialUSB.println("Unspecified error.");
+      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
+      while (1);
   }
 }
 
@@ -424,6 +434,8 @@ void printSensorError()
   if ( error == 0xFF ) //comm error
   {
     SerialUSB.println("Failed to get ERROR_ID register.");
+    SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
+    while (1);
   }
   else
   {
@@ -434,7 +446,9 @@ void printSensorError()
     if (error & 1 << 2) SerialUSB.print("MeasModeInvalid");
     if (error & 1 << 1) SerialUSB.print("ReadRegInvalid");
     if (error & 1 << 0) SerialUSB.print("MsgInvalid");
+    SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
     SerialUSB.println();
+    while (1);
   }
 }
 
