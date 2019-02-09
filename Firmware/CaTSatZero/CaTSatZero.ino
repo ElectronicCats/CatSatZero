@@ -206,7 +206,7 @@ void setup() {
 
   //This begins the CCS811 sensor and prints error status of .begin()
    if(!ccs.begin()){
-    Serial.println("Failed to start sensor! Please check your wiring.");
+    Serial.println("Failed to start sensor CCS811! Please check your wiring.");
     while(1);
   }
 
@@ -304,8 +304,6 @@ void printInfoSerial()
       Serial.print(ccs.geteCO2());
       Serial.print("ppm, TVOC: ");
       Serial.print(ccs.getTVOC());
-      Serial.print("ppb   Temp:");
-      Serial.println(temp);
       #endif
       Todo += ccs.geteCO2();
       Todo += ","; 
