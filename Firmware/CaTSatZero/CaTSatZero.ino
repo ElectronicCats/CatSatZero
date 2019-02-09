@@ -314,7 +314,7 @@ void printInfoSerial()
   #ifdef DEBUG
   //getCO2() gets the previously read data from the library
   SerialUSB.println("CCS811 data:");
-  SerialUSB.print(" CO2 concentration : ");
+  SerialUSB.print(" CO2: ");
   SerialUSB.print(myCCS811.getCO2());
   SerialUSB.println(" ppm");
   #endif
@@ -324,7 +324,7 @@ void printInfoSerial()
 
   //getTVOC() gets the previously read data from the library
   #ifdef DEBUG
-  SerialUSB.print(" TVOC concentration : ");
+  SerialUSB.print(" TVOC: ");
   SerialUSB.print(myCCS811.getTVOC());
   SerialUSB.println(" ppb");
   #endif
