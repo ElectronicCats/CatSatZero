@@ -60,7 +60,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 */
 //Uncomment for debug
 #define DEBUG
-#define DEBUG2
+//#define DEBUG2
 
 #include <SPI.h>
 #include <LoRa.h>
