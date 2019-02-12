@@ -272,23 +272,16 @@ void loop() {
     gpsread();
     
     Serial.println(Todo);
-    enviarInfo(Todo);  
-    digitalWrite(LED_BUILTIN,HIGH); 
-    delay(500);
-    digitalWrite(LED_BUILTIN,LOW); 
-    delay(500); 
-    digitalWrite(LED_BUILTIN,HIGH); 
-    delay(500);
-    digitalWrite(LED_BUILTIN,LOW); 
-    delay(500); 
-    digitalWrite(LED_BUILTIN,HIGH); 
-    delay(500);
-    digitalWrite(LED_BUILTIN,LOW); 
-    delay(500); 
+    enviarInfo(Todo);
+    for(int i = 0; i<5;i++){
+      digitalWrite(LED_BUILTIN,HIGH); 
+      delay(500);
+      digitalWrite(LED_BUILTIN,LOW); 
+      delay(500); 
+    }
     }
   
     Todo = "";
-  
   // parse for a packet, and call onReceive with the result:
   //onReceive(LoRa.parsePacket());
   
