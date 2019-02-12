@@ -70,7 +70,8 @@ https://github.com/sandeepmistry/arduino-LoRa
 
 #include <Wire.h>
 #include <SparkFunBME280.h>
-#include <SparkFunCCS811.h>
+
+#include <Adafruit_CCS811.h>
 
 #define CCS811_ADDR 0x5A //0x5B Alternate I2C Address
 
@@ -80,7 +81,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 #define PMTK_SET_NMEA_OUTPUT_RMCGGA "$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28"
 
 //Global sensor objects
-CCS811 myCCS811(CCS811_ADDR);
+Adafruit_CCS811 ccs;
 BME280 myBME280;
 
 static NMEAGPS gps;
@@ -204,12 +205,20 @@ void setup() {
   /******************/
 
   //This begins the CCS811 sensor and prints error status of .begin()
-  CCS811Core::status returnCode = myCCS811.begin();
-  SerialUSB.print("CCS811 begin exited with: ");
-  //Pass the error code to a function to print the results
-  printDriverError( returnCode );
-  SerialUSB.println();
+   if(!ccs.begin()){
+    Serial.println("Failed to start sensor CCS811! Please check your wiring.");
+    while(1);
+  }
 
+  //calibrate temperature sensor
+  while(!ccs.available());
+  float temp = ccs.calculateTemperature();
+  ccs.setTempOffset(temp - 25.0);
+
+  //For I2C, enable the following and disable the SPI section
+  myBME280.settings.commInterface = I2C_MODE;
+  myBME280.settings.I2CAddress = 0x76;
+  
   //Initialize BME280
   //For I2C, enable the following and disable the SPI section
   myBME280.settings.commInterface = I2C_MODE;
@@ -251,32 +260,8 @@ void loop() {
   
   while (gps.available( gpsPort )) {
     fix = gps.read();
-    //Check to see if data is available
-    if (myCCS811.dataAvailable())
-    {
-      //Calling this function updates the global tVOC and eCO2 variables
-      myCCS811.readAlgorithmResults();
-      //printInfoSerial fetches the values of tVOC and eCO2
-      printInfoSerial();
-
-      float BMEtempC = myBME280.readTempC();
-      float BMEhumid = myBME280.readFloatHumidity();
     
-      #ifdef DEBUG
-      SerialUSB.print("Applying new values (deg C, %): ");
-      SerialUSB.print(BMEtempC);
-      SerialUSB.print(",");
-      SerialUSB.println(BMEhumid);
-      SerialUSB.println();
-      #endif
-      //This sends the temperature data to the CCS811
-      myCCS811.setEnvironmentalData(BMEhumid, BMEtempC);
-    }
-    else if (myCCS811.checkForStatusError())
-    {
-      //If the CCS811 found an internal error, print it.
-      printSensorError();
-    }
+    printInfoSerial();
 
     // read the input on analog pin battery 
     //NOTE: voltage max 1.18v in the pin of chip
@@ -311,25 +296,25 @@ void loop() {
 
 void printInfoSerial()
 {
-  #ifdef DEBUG
-  //getCO2() gets the previously read data from the library
-  SerialUSB.println("CCS811 data:");
-  SerialUSB.print(" CO2: ");
-  SerialUSB.print(myCCS811.getCO2());
-  SerialUSB.println(" ppm");
-  #endif
-  Todo += myCCS811.getCO2();
-  Todo += ","; 
-  
-
-  //getTVOC() gets the previously read data from the library
-  #ifdef DEBUG
-  SerialUSB.print(" TVOC: ");
-  SerialUSB.print(myCCS811.getTVOC());
-  SerialUSB.println(" ppb");
-  #endif
-  Todo += myCCS811.getTVOC();
-  Todo += ","; 
+    if(ccs.available()){
+    float temp = ccs.calculateTemperature();
+    if(!ccs.readData()){
+      #ifdef DEBUG
+      Serial.print("CO2: ");
+      Serial.print(ccs.geteCO2());
+      Serial.print("ppm, TVOC: ");
+      Serial.print(ccs.getTVOC());
+      #endif
+      Todo += ccs.geteCO2();
+      Todo += ","; 
+      Todo += ccs.getTVOC();
+      Todo += ","; 
+    }
+    else{
+      Serial.println("ERROR!");
+      while(1);
+    }
+  }
 
   #ifdef DEBUG
   SerialUSB.println("BME280 data:");
@@ -373,72 +358,6 @@ void printInfoSerial()
   Todo += ","; 
 
   SerialUSB.println();
-}
-
-//printDriverError decodes the CCS811Core::status type and prints the
-//type of error to the serial terminal.
-//
-//Save the return value of any function of type CCS811Core::status, then pass
-//to this function to see what the output was.
-void printDriverError( CCS811Core::status errorCode )
-{
-  switch ( errorCode )
-  {
-    case CCS811Core::SENSOR_SUCCESS:
-      SerialUSB.println("SUCCESS");
-      break;
-    case CCS811Core::SENSOR_ID_ERROR:
-      SerialUSB.println("ID_ERROR");
-      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-      while (1);
-      break;
-    case CCS811Core::SENSOR_I2C_ERROR:
-      SerialUSB.println("I2C_ERROR");
-      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-      while (1);
-      break;
-    case CCS811Core::SENSOR_INTERNAL_ERROR:
-      SerialUSB.println("INTERNAL_ERROR");
-      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-      while (1);
-      break;
-    case CCS811Core::SENSOR_GENERIC_ERROR:
-      SerialUSB.println("GENERIC_ERROR");
-      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-      while (1);
-      break;
-    default:
-      SerialUSB.println("Unspecified error.");
-      SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-      while (1);
-  }
-}
-
-//printSensorError gets, clears, then prints the errors
-//saved within the error register.
-void printSensorError()
-{
-  uint8_t error = myCCS811.getErrorRegister();
-
-  if ( error == 0xFF ) //comm error
-  {
-    SerialUSB.println("Failed to get ERROR_ID register.");
-    SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-    while (1);
-  }
-  else
-  {
-    SerialUSB.print("Error: ");
-    if (error & 1 << 5) SerialUSB.print("HeaterSupply");
-    if (error & 1 << 4) SerialUSB.print("HeaterFault");
-    if (error & 1 << 3) SerialUSB.print("MaxResistance");
-    if (error & 1 << 2) SerialUSB.print("MeasModeInvalid");
-    if (error & 1 << 1) SerialUSB.print("ReadRegInvalid");
-    if (error & 1 << 0) SerialUSB.print("MsgInvalid");
-    SerialUSB.println("Could not find a valid CCS811 sensor, check wiring!");
-    SerialUSB.println();
-    while (1);
-  }
 }
 
 long selectBand(int a)
