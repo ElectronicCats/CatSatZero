@@ -4,7 +4,7 @@
 
 Kit CatSat Zero Education (**STATUS: BETA**)
 
-Manual and more information in our [Wiki](https://github.com/ElectronicsCats/CatSatZero/wiki)
+Manual and more information in our [Wiki](https://github.com/ElectronicCats/CatSatZero/wiki)
 
 Electronic Cats invests time and resources providing this open source design, please support Electronic Cats and open-source hardware by purchasing products from Electronic Cats!
 
