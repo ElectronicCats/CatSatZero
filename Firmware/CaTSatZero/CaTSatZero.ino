@@ -205,7 +205,7 @@ void setup() {
   /******************/
 
   //This begins the CCS811 sensor and prints error status of .begin()
-   if(!ccs.begin()){
+   if(!ccs.begin(CCS811_ADDR)){
     Serial.println("Failed to start sensor CCS811! Please check your wiring.");
     while(1);
   }
