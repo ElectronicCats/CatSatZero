@@ -259,10 +259,10 @@ void loop() {
   
   Todo += id_node;  //Add id to String 
   Todo += ",";
-  
-  while (gps.available( gpsPort )) {
-    last_rx = millis();
-    fix = gps.read();
+
+while (gps.available( gpsPort )) {
+  last_rx = millis();
+  fix = gps.read();
     
     printInfoSerial();
 
@@ -408,9 +408,9 @@ long selectBand(int a)
 
 static void listenForSomething()
 {
-  uint32_t current_ms         = millis();
+  uint32_t current_ms  =  millis();
   uint32_t ms_since_last_rx   = current_ms - last_rx;
-    if ((ms_since_last_rx > 5)) {
+    if ((ms_since_last_rx >7000)) {
       DEBUG_PORT.println( F("\nCheck GPS device and/or connections.  No data received.\n") );
  }
 }
