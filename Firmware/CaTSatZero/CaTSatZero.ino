@@ -195,6 +195,7 @@ void ballonModeGPS(){
              }
              if(!gpsData.startsWith("$PMTK001,8"))flag=0;
              gpsData="";
+           Serial1.println(PMTK_SET_NMEA_OUTPUT_RMCGGA);
           }
         }
        }
