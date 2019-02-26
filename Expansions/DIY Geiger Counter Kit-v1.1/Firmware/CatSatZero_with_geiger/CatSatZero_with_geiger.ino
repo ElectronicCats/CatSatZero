@@ -105,6 +105,8 @@ BME280 myBME280;
 
 static NMEAGPS gps;
 static gps_fix  fix;
+static uint32_t last_rx = 0UL; // The last millis() time a character was
+                               // received from GPS.
 
 String Todo; //String a mandar
 
@@ -311,6 +313,7 @@ void loop(){
   }
   
   while (gps.available( gpsPort )) {
+    last_rx = millis();
     fix = gps.read();
     
     printInfoSerial();
@@ -334,6 +337,7 @@ void loop(){
     }
   
    Todo = "";
+   listenForSomething();
 }
 
 void printInfoSerial()
@@ -459,4 +463,17 @@ long selectBand(int a)
     return 915000000; //915
   break;
   }
+}
+
+//----------------------------------------------------------------
+//  Listen to see if the GPS device is correctly 
+//  connected and functioning.
+
+static void listenForSomething()
+{
+  uint32_t current_ms  =  millis();
+  uint32_t ms_since_last_rx   = current_ms - last_rx;
+    if ((ms_since_last_rx >7000)) {
+      DEBUG_PORT.println( F("\nCheck GPS device and/or connections.  No data received.\n") );
+ }
 }
