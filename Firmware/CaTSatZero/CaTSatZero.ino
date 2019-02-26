@@ -60,7 +60,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 */
 //Uncomment for debug
 #define DEBUG
-//#define DEBUG2
+#define DEBUG2
 
 #include <SPI.h>
 #include <LoRa.h>
@@ -76,7 +76,7 @@ https://github.com/sandeepmistry/arduino-LoRa
 #define CCS811_ADDR 0x5A //0x5B Alternate I2C Address
 
 //Command activation Balloon mode
-#define PMTK_SET_NMEA_886_PMTK_FR_MODE  "$PMTK001,886,3*36"
+#define PMTK_SET_NMEA_886_PMTK_FR_MODE  "$PMTK886,3*2B"
 // Command turn on GPRMC and GGA
 #define PMTK_SET_NMEA_OUTPUT_RMCGGA "$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28"
 
@@ -107,7 +107,7 @@ byte msgCount = 0;            // count of outgoing messages
 byte localAddress = 0xBB;     // address of this device
 byte destination = 0xFF;      // destination to send to
 
-float voltage=0;
+uint16_t voltage=0;
 
 void enviarInfo(String outgoing) {
   LoRa.beginPacket();                   // start packet
@@ -118,7 +118,6 @@ void enviarInfo(String outgoing) {
   SerialUSB.println("Dato enviado");
   #endif
 }
-
 
 void gpsread(void){
   SerialUSB.print("Location: "); 
@@ -180,6 +179,29 @@ void gpsread(void){
 
 }
 
+void ballonModeGPS(){
+  Serial1.begin(9600);
+  bool flag=0;
+  String gpsData="";
+  while(!flag){
+       if ((Serial1.available())){ 
+        while(Serial1.available()){
+          char c = Serial1.read();  //Wait for a data on the GPS
+          if(c='\n'){
+            flag=1;
+            Serial1.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
+            while(Serial1.available()){
+             gpsData+=(char)Serial1.read();
+             }
+             if(!gpsData.startsWith("$PMTK001,8"))flag=0;
+             gpsData="";
+          }
+        }
+       }
+    }
+   Serial.println("GPS balloon mode configured");  
+  }
+
 void setup() {
   SerialUSB.begin(9600);
   #ifdef DEBUG2
@@ -194,6 +216,7 @@ void setup() {
   pinMode(A6, OUTPUT); //Wakeup pin CCS811
   digitalWrite(A6,LOW);//Enable CCS811
 
+  analogReference(AR_INTERNAL2V23);
   /*****LoRa init****/
 
   if (!LoRa.begin(selectBand(channel))) {           // initialize ratio at 915 MHz
@@ -240,19 +263,9 @@ void setup() {
      while (1);
    }
 
+  ballonModeGPS();
+  
   SerialUSB.println("CaTSat Zero Ready!");
-
-  /*
-  * Activation Balloon mode: 
-  * For high-altitude balloon purpose that the vertical movement will 
-  * have more effect on the position calculation
-  */
-  gpsPort.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
-  
-  //Command turn on GPRMC and GGA
-  gpsPort.println(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  
-  gpsPort.begin(9600);
 }
 
 void loop() {
@@ -260,17 +273,17 @@ void loop() {
   Todo += id_node;  //Add id to String 
   Todo += ",";
 
-while (gps.available( gpsPort )) {
-  last_rx = millis();
-  fix = gps.read();
+  while (gps.available( gpsPort )) {
+    last_rx = millis();
+    fix = gps.read();
     
     printInfoSerial();
 
     // read the input on analog pin battery 
     //NOTE: voltage max 1.18v in the pin of chip
-    int sensorValue = analogRead(ADC_BATTERY);
+    uint16_t sensorValue = analogRead(ADC_BATTERY);
     // Convert the analog reading (0 - 1.18v to 0 - 100%):
-    voltage = map(sensorValue,0,339,0,100);
+    voltage = sensorValue;
   
     gpsread();
     
@@ -281,10 +294,10 @@ while (gps.available( gpsPort )) {
       delay(500);
       digitalWrite(LED_BUILTIN,LOW); 
       delay(500); 
-    }
+      }
     }
   
-    Todo = "";
+   Todo = "";
    listenForSomething();
   // parse for a packet, and call onReceive with the result:
   //onReceive(LoRa.parsePacket());
@@ -314,6 +327,7 @@ void printInfoSerial()
   }
 
   #ifdef DEBUG
+  SerialUSB.println();
   SerialUSB.println("BME280 data:");
   SerialUSB.print(" Temperature: ");
   SerialUSB.print(myBME280.readTempC(), 2);
@@ -349,7 +363,7 @@ void printInfoSerial()
   // print out the value you read:
   #ifdef DEBUG
   Serial.print(voltage);
-  Serial.println("V");
+  Serial.println(" V");
   #endif
   Todo += voltage;
   Todo += ","; 
@@ -357,8 +371,7 @@ void printInfoSerial()
   SerialUSB.println();
 }
 
-long selectBand(int a)
-{    
+long selectBand(int a){    
   switch(a){ 
     case 0:
     return 903080000; //903.08Mhz
