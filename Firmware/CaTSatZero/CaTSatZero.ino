@@ -73,6 +73,50 @@ https://github.com/sandeepmistry/arduino-LoRa
 
 #include <Adafruit_CCS811.h>
 
+/*
+  Radiation Detector Compatible DIY Kit ver 2.01 or higher
+
+  CPM counting algorithm is very simple, it just collect GM Tube events during presettable log period.
+  For radiation monitoring station it's recommended to use 30-60 seconds logging period. Feel free to modify
+  or add functions to this sketch. This Arduino software is an example only for education purpose without any
+  warranty for precision radiation measurements. You are fully responsible for your safety in high
+  radiation area!!
+  --------------------------------------------------------------------------------------
+  WHAT IS CPM?
+  CPM (or counts per minute) is events quantity from Geiger Tube you get during one minute. Usually it used to
+  calculate a radiation level. Different GM Tubes has different quantity of CPM for background. Some tubes can produce
+  about 10-50 CPM for normal background, other GM Tube models produce 50-100 CPM or 0-5 CPM for same radiation level.
+  Please refer your GM Tube datasheet for more information. Just for reference here, SBM-20 can generate
+  about 10-50 CPM for normal background.
+  --------------------------------------------------------------------------------------
+  HOW TO CONNECT GEIGER KIT?
+  The kit 3 wires that should be connected to CatSat board: VCC, GND and INT. PullUp resistor is included on
+  kit PCB. Connect INT wire to Digital Pin (Interrupt), 5V to VCC, GND to GND. Then connect the Arduino with
+  USB cable to the computer and upload this sketch.
+*/
+//Active Geiger Version
+//#define GEIGER
+
+#ifdef GEIGER
+#define LOG_PERIOD 15000  //Logging period in milliseconds, recommended value 15000-60000.
+#define MAX_PERIOD 60000  //Maximum logging period without modifying this sketch
+
+//CPM to uSV/h
+//The GM tube M4011 conversion index is 151, which means that: 151CPM=1μSv/h.
+//So if the counter number is 30 CPM, the radiation is also:
+//(30/151)μSv/h=0.1987μSv/h
+#define index_conversion 151.00
+
+unsigned long counts = 0;     //variable for GM Tube events
+unsigned long cpm = 0;        //variable for CPM
+unsigned int multiplier;  //variable for calculation CPM in this sketch
+unsigned long previousMillis;  //variable for time measurement
+float radiationValue = 0.0;
+
+#define radationpin 4
+
+#endif
+
 #define CCS811_ADDR 0x5A //0x5B Alternate I2C Address
 
 //Command activation Balloon mode
@@ -108,6 +152,16 @@ byte localAddress = 0xBB;     // address of this device
 byte destination = 0xFF;      // destination to send to
 
 uint16_t voltage=0;
+
+#ifdef GEIGER
+void tube_impulse() {      //subprocedure for capturing events from Geiger Kit
+  detachInterrupt(radationpin);
+  counts++;
+  while (digitalRead(radationpin) == 0) {
+  }
+  attachInterrupt(digitalPinToInterrupt(radationpin), tube_impulse, FALLING);
+}
+#endif
 
 void enviarInfo(String outgoing) {
   LoRa.beginPacket();                   // start packet
@@ -265,6 +319,10 @@ void setup() {
    }
 
   ballonModeGPS();
+  #ifdef GEIGER
+  multiplier = MAX_PERIOD / LOG_PERIOD;      //calculating multiplier, depend on your log period
+  attachInterrupt(digitalPinToInterrupt(radationpin), tube_impulse, FALLING); //define external interrupts
+  #endif
   
   SerialUSB.println("CaTSat Zero Ready!");
 }
@@ -273,6 +331,22 @@ void loop() {
   
   Todo += id_node;  //Add id to String 
   Todo += ",";
+
+  #ifdef GEIGER
+  //Read Geiger Sensor
+  if (millis() - previousMillis > LOG_PERIOD) {
+    previousMillis = millis();
+    cpm = counts * multiplier;
+    radiationValue = cpm / index_conversion;
+    #ifdef DEBUG
+    Serial.print("cpm = ");
+    Serial.println(cpm, DEC);
+    Serial.print("uSv/h = ");
+    Serial.println(radiationValue, 4);
+    #endif
+    counts = 0;
+  }
+  #endif
 
   while (gps.available( gpsPort )) {
     last_rx = millis();
