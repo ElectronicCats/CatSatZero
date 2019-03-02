@@ -59,8 +59,8 @@
 
 */
 //Uncomment for debug
-#define DEBUG
-#define DEBUG2
+//#define DEBUG
+//#define DEBUG2
 
 #include <SPI.h>
 #include <LoRa.h>
@@ -237,8 +237,8 @@ void ballonModeGPS() {
       Serial1.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
       delay(100);
       Serial1.println(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+      SerialUSB.println("GPS balloon mode configured");
     }
-  SerialUSB.println("GPS balloon mode configured");
 }
 
 void setup() {
