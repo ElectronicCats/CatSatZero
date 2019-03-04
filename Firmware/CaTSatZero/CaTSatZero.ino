@@ -232,6 +232,11 @@ void gpsread(void) {
 
 }
 
+/*
+  Activation Balloon mode:
+  For high-altitude balloon purpose that the vertical movement will
+  have more effect on the position calculation
+*/
 void ballonModeGPS() {
     if ((Serial1.available())) {
       Serial1.println(PMTK_SET_NMEA_886_PMTK_FR_MODE);
@@ -239,6 +244,9 @@ void ballonModeGPS() {
       Serial1.println(PMTK_SET_NMEA_OUTPUT_RMCGGA);
       SerialUSB.println("GPS balloon mode configured");
     }
+    else{
+      SerialUSB.println("Error in GPS balloon mode not configured");
+      }
 }
 
 void setup() {
@@ -303,11 +311,7 @@ void setup() {
     while (1);
   }
 
-  /*
-    Activation Balloon mode:
-    For high-altitude balloon purpose that the vertical movement will
-    have more effect on the position calculation
-  */
+
   ballonModeGPS();
 
 #ifdef GEIGER
