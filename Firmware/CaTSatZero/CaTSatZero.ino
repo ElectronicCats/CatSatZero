@@ -150,7 +150,7 @@ byte msgCount = 0;            // count of outgoing messages
 byte localAddress = 0xBB;     // address of this device
 byte destination = 0xFF;      // destination to send to
 
-uint16_t voltage = 0;
+float voltage = 0;
 
 #ifdef GEIGER
 void tube_impulse() {      //subprocedure for capturing events from Geiger Kit
@@ -264,15 +264,16 @@ void setup() {
   pinMode(A6, OUTPUT); //Wakeup pin CCS811
   digitalWrite(A6, LOW); //Enable CCS811
 
-  analogReference(AR_INTERNAL2V23);
+  analogReadResolution(10);
+  analogReference(AR_INTERNAL2V23); 
+  
   /*****LoRa init****/
-
-  if (!LoRa.begin(selectBand(channel))) {           // initialize ratio at 915 MHz
+  if (!LoRa.begin(selectBand(channel))) {           
     Serial.println("LoRa init failed. Check your connections.");
-    while (true);                       // if failed, do nothing
+    while (true);                       
   }
   LoRa.enableCrc();
-  LoRa.setTxPower(17); //Set the max transmition power
+  LoRa.setTxPower(20); //Set the max transmition power
   LoRa.setSpreadingFactor(10); //Change the SF to get longer distances
 
   /******************/
@@ -352,8 +353,8 @@ void loop() {
     // read the input on analog pin battery
     //NOTE: voltage max 1.18v in the pin of chip
     uint16_t sensorValue = analogRead(ADC_BATTERY);
-    // Convert the analog reading (0 - 1.18v to 0 - 100%):
-    voltage = sensorValue;
+    voltage = sensorValue*2.23/1024;
+    voltage = voltage*3.05;
 
     gpsread();
 
@@ -486,8 +487,7 @@ long selectBand(int a) {
 //  Listen to see if the GPS device is correctly
 //  connected and functioning.
 
-static void listenForSomething()
-{
+static void listenForSomething(){
   uint32_t current_ms  =  millis();
   uint32_t ms_since_last_rx   = current_ms - last_rx;
   if ((ms_since_last_rx > 7000)) {
