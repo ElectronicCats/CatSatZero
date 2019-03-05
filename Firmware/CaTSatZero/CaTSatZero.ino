@@ -245,7 +245,7 @@ void ballonModeGPS() {
       SerialUSB.println("GPS balloon mode configured");
     }
     else{
-      SerialUSB.println("Error in GPS balloon mode not configured");
+      SerialUSB.println("Error in GPS, balloon mode not configured");
       }
 }
 
