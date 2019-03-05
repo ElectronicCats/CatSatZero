@@ -173,13 +173,13 @@ void enviarInfo(String outgoing) {
 }
 
 void gpsread(void) {
-  SerialUSB.print("Location: ");
   if (fix.valid.location)
   {
     Todo += String(fix.latitude(), 6);
     Todo += ",";
     Todo += String(fix.longitude(), 6);
-#ifdef DEBUG
+#ifdef DEBUG 
+    SerialUSB.print("Location: ");
     SerialUSB.print(fix.latitude(), 6);
     SerialUSB.print(F(","));
     SerialUSB.print(fix.longitude(), 6);
