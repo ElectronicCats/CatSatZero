@@ -321,6 +321,7 @@ void setup() {
 #endif
 
   SerialUSB.println("CaTSat Zero Ready!");
+  Serial.println(F("Fw version 0.0.3"));
 }
 
 void loop() {
