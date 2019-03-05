@@ -99,26 +99,33 @@ void setup()
   LoRa.enableCrc();
   LoRa.setTxPower(20); //Set the max transmition power
   LoRa.setSpreadingFactor(10); //Change the SF to get longer distances
+    // register the receive callback
+  LoRa.onReceive(onReceive);
+
+  // put the radio into receive mode
+  LoRa.receive();
 }
  
 void loop()
 {
-  int packetSize = LoRa.parsePacket();
-  if (packetSize) {
-    digitalWrite(LED_BUILTIN,HIGH);
-    // read packet
-    while (LoRa.available()) {
-      buff+=(char)LoRa.read();
-    }
-    buff+=",";
-    buff+=String(LoRa.packetRssi());
-    if(buff.startsWith(ID)){
-      Serial.println(buff);
-    }
-    buff="";
 
-    digitalWrite(LED_BUILTIN,LOW);
+}
+
+void onReceive(int packetSize) {
+  // received a packet
+  digitalWrite(LED_BUILTIN,HIGH);
+
+  // read packet
+  for (int i = 0; i < packetSize; i++) {
+     buff+=(char)LoRa.read();
   }
+  buff+=",";
+  buff+=String(LoRa.packetRssi());
+  if(buff.startsWith(ID)){
+    Serial.println(buff);
+  }
+  buff="";
+  digitalWrite(LED_BUILTIN,LOW);
 }
 
 long selectBand(int a)
