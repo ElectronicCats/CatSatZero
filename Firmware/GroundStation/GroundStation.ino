@@ -67,7 +67,7 @@ String ID = "A1";
  *Selecciona un canal entre 0 y 12 este debe coincidir *
  *con el canal de tu satelite                          *
  *******************************************************/
-int channel = 12;
+int chan = 12;
 
 String buff;
 
@@ -92,12 +92,12 @@ void setup()
   //Re-write pins CS, reset, y IRQ for CatWAN USB Stick Electronic Cats
   LoRa.setPins(SS, RFM_RST, RFM_DIO0);
 
-  if (!LoRa.begin(selectBand(channel))) {
+  if (!LoRa.begin(selectBand(chan))) {
     Serial.println("Starting LoRa failed!");
     while (1);
   }
   LoRa.enableCrc();
-  LoRa.setTxPower(17); //Set the max transmition power
+  LoRa.setTxPower(20); //Set the max transmition power
   LoRa.setSpreadingFactor(10); //Change the SF to get longer distances
 }
  
