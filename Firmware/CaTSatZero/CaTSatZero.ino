@@ -59,11 +59,11 @@
 
 */
 //Uncomment for debug
-//#define DEBUG
-//#define DEBUG2
+#define DEBUG
+#define DEBUG2
 
 #include <SPI.h>
-#include <LoRa.h>
+#include <RH_RF95.h>
 
 #include <NMEAGPS.h>
 
@@ -134,6 +134,8 @@ static uint32_t last_rx = 0UL; // The last millis() time a character was
 
 String Todo; //String a mandar
 
+RH_RF95 rf95(SS, LORA_RESET);
+
 /************************************************************
      IMPORTANTE CAMBIAR id_node DEPENDIENDO TU CANSAT
 ************************************************************/
@@ -146,9 +148,6 @@ String id_node = "A1";
  *******************************************************/
 int channel = 12;
 
-byte msgCount = 0;            // count of outgoing messages
-byte localAddress = 0xBB;     // address of this device
-byte destination = 0xFF;      // destination to send to
 
 float voltage = 0;
 
@@ -163,10 +162,10 @@ void tube_impulse() {      //subprocedure for capturing events from Geiger Kit
 #endif
 
 void enviarInfo(String outgoing) {
-  LoRa.beginPacket();                   // start packet
-  LoRa.print(outgoing);                 // add payload
-  LoRa.endPacket();                     // finish packet and send it
-  msgCount++;                           // increment message ID
+    char todoch[outgoing.length()+1];
+    outgoing.toCharArray(todoch,outgoing.length());
+    Serial.println(todoch);
+    rf95.send((uint8_t *)todoch,outgoing.length());  
 #ifdef DEBUG
   SerialUSB.println("Dato enviado");
 #endif
@@ -267,14 +266,31 @@ void setup() {
   analogReadResolution(10);
   analogReference(AR_INTERNAL2V23); 
   
+  // Hardware reset
+  pinMode(LORA_BOOT0, OUTPUT);
+  digitalWrite(LORA_BOOT0, LOW);
+
+  pinMode(LORA_RESET, OUTPUT);
+  digitalWrite(LORA_RESET, HIGH);
+  delay(200);
+  digitalWrite(LORA_RESET, LOW);
+  delay(200);
+  digitalWrite(LORA_RESET, HIGH);
+  delay(50);
   /*****LoRa init****/
-  if (!LoRa.begin(selectBand(channel))) {           
-    Serial.println("LoRa init failed. Check your connections.");
-    while (true);                       
+  while (!rf95.init()) {
+    Serial.println(F("LoRa radio init failed"));
+    while (1);
   }
-  LoRa.enableCrc();
-  LoRa.setTxPower(20); //Set the max transmition power
-  LoRa.setSpreadingFactor(10); //Change the SF to get longer distances
+  Serial.println("LoRa radio init OK!");
+ 
+  float chann = selectBand(channel);
+  if (!rf95.setFrequency(chann)) {
+    Serial.println(F("setFrequency failed"));
+    while (1);
+    }
+    
+  rf95.setTxPower(23, false); //Set the max transmition power
 
   /******************/
 
@@ -440,49 +456,50 @@ void printInfoSerial()
   SerialUSB.println();
 }
 
-long selectBand(int a) {
-  switch (a) {
+float selectBand(int a){    
+  switch(a){ 
     case 0:
-      return 903080000; //903.08Mhz
-      break;
+    return 903.08;
+  break;
     case 1:
-      return 905240000; //905.24
-      break;
+    return 905.24;
+  break;
     case 2:
-      return 907400000; //907.40
-      break;
+    return 907.40;
+  break;
     case 3:
-      return 909560000; //909.56
-      break;
+    return 909.56;
+  break;
     case 4:
-      return 911720000; //911.72
-      break;
+    return 911.72;
+  break;
     case 5:
-      return 913880000; //913.88
-      break;
+    return 913.88;
+  break;
     case 6:
-      return 916040000; //916.04
-      break;
+    return 916.04;
+  break;
     case 7:
-      return 918200000; // 918.20
-      break;
+    return 918.20;
+  break;
     case 8:
-      return 920360000; //920.36
-      break;
+    return 920.36;
+  break;
     case 9:
-      return 922520000; //922.52
-      break;
+    return 922.52;
+  break;
     case 10:
-      return 924680000; //924.68
-      break;
+    return 924.68;
+  break;
     case 11:
-      return 926840000; //926.84
-      break;
+    return 926.84;
+  break;
     case 12:
-      return 915000000; //915
-      break;
+    return 915;
+  break;
   }
-}
+  
+ }
 
 //----------------------------------------------------------------
 //  Listen to see if the GPS device is correctly
