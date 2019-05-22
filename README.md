@@ -1,4 +1,5 @@
 # CaTSatZero
+![CatSatZero](https://github.com/ElectronicCats/CatSatZero/raw/master/catsatzero.jpg)
 
 
 Kit CatSat Zero Education (**STATUS: BETA**)
@@ -8,6 +9,8 @@ Manual and more information in our [Wiki](https://github.com/ElectronicCats/CatS
 Electronic Cats invests time and resources providing this open source design, please support Electronic Cats and open-source hardware by purchasing products from Electronic Cats!
 
 Designed by Electronic Cats.
+
+## License
 
 Firmware released under an GNU AGPL v3.0 license. See the LICENSE file for more information.
 
