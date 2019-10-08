@@ -59,8 +59,8 @@
 
 */
 //Uncomment for debug
-//#define DEBUG
-//#define DEBUG2
+#define DEBUG
+#define DEBUG2
 
 #include <SPI.h>
 #include <LoRa.h>
@@ -72,38 +72,10 @@
 
 #include <Adafruit_CCS811.h>
 
-/*
-  Radiation Detector Compatible DIY Kit ver 2.01 or higher
-
-  CPM counting algorithm is very simple, it just collect GM Tube events during presettable log period.
-  For radiation monitoring station it's recommended to use 30-60 seconds logging period. Feel free to modify
-  or add functions to this sketch. This Arduino software is an example only for education purpose without any
-  warranty for precision radiation measurements. You are fully responsible for your safety in high
-  radiation area!!
-  --------------------------------------------------------------------------------------
-  WHAT IS CPM?
-  CPM (or counts per minute) is events quantity from Geiger Tube you get during one minute. Usually it used to
-  calculate a radiation level. Different GM Tubes has different quantity of CPM for background. Some tubes can produce
-  about 10-50 CPM for normal background, other GM Tube models produce 50-100 CPM or 0-5 CPM for same radiation level.
-  Please refer your GM Tube datasheet for more information. Just for reference here, SBM-20 can generate
-  about 10-50 CPM for normal background.
-  --------------------------------------------------------------------------------------
-  HOW TO CONNECT GEIGER KIT?
-  The kit 3 wires that should be connected to CatSat board: VCC, GND and INT. PullUp resistor is included on
-  kit PCB. Connect INT wire to Digital Pin (Interrupt), 5V to VCC, GND to GND. Then connect the Arduino with
-  USB cable to the computer and upload this sketch.
-*/
-//Active Geiger Version
-//#define GEIGER
-
 #ifdef GEIGER
 #define LOG_PERIOD 15000  //Logging period in milliseconds, recommended value 15000-60000.
 #define MAX_PERIOD 60000  //Maximum logging period without modifying this sketch
 
-//CPM to uSV/h
-//The GM tube M4011 conversion index is 151, which means that: 151CPM=1μSv/h.
-//So if the counter number is 30 CPM, the radiation is also:
-//(30/151)μSv/h=0.1987μSv/h
 #define index_conversion 151.00
 
 unsigned long counts = 0;     //variable for GM Tube events
@@ -146,27 +118,15 @@ String id_node = "A1";
  *******************************************************/
 int channel = 12;
 
-byte msgCount = 0;            // count of outgoing messages
-byte localAddress = 0xBB;     // address of this device
-byte destination = 0xFF;      // destination to send to
-
 float voltage = 0;
 
-#ifdef GEIGER
-void tube_impulse() {      //subprocedure for capturing events from Geiger Kit
-  detachInterrupt(radationpin);
-  counts++;
-  while (digitalRead(radationpin) == 0) {
-  }
-  attachInterrupt(digitalPinToInterrupt(radationpin), tube_impulse, FALLING);
-}
-#endif
-
 void enviarInfo(String outgoing) {
-  LoRa.beginPacket();                   // start packet
-  LoRa.print(outgoing);                 // add payload
-  LoRa.endPacket();                     // finish packet and send it
-  msgCount++;                           // increment message ID
+  LoRa.beginPacket();
+  char outgoingCh[Todo.length()+1];
+  outgoing.toCharArray(outgoingCh,outgoing.length());
+  LoRa.write((uint8_t *)outgoingCh,outgoing.length());                                     
+  LoRa.endPacket();                    
+
 #ifdef DEBUG
   SerialUSB.println("Dato enviado");
 #endif
@@ -278,12 +238,14 @@ void setup() {
 
   /******************/
 
+  Serial.println("LoRa Ok");
   //This begins the CCS811 sensor and prints error status of .begin()
   if (!ccs.begin(CCS811_ADDR)) {
     Serial.println("Failed to start sensor CCS811! Please check your wiring.");
     while (1);
   }
-
+ 
+  Serial.println("CCS begin");
   //calibrate temperature sensor
   while (!ccs.available());
   float temp = ccs.calculateTemperature();
@@ -307,14 +269,16 @@ void setup() {
   //Calling .begin() causes the settings to be loaded
   delay(10);  //Make sure sensor had enough time to turn on. BME280 requires 2ms to start up.
   int status280 = myBME280.begin();
+  
+  Serial.println("BME begin");
   if (status280 != 0x60) {
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while (1);
   }
-
-
+  
+  Serial.println("Ballon");
   ballonModeGPS();
-
+  
 #ifdef GEIGER
   multiplier = MAX_PERIOD / LOG_PERIOD;      //calculating multiplier, depend on your log period
   attachInterrupt(digitalPinToInterrupt(radationpin), tube_impulse, FALLING); //define external interrupts
