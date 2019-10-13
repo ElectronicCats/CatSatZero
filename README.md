@@ -1,14 +1,16 @@
 # CaTSatZero
-![CatSatZero](https://github.com/ElectronicCats/CatSatZero/raw/master/catsatzero.jpg)
 
-
-Kit CatSat Zero Education (**STATUS: BETA**)
+Kit CatSat Zero Education
 
 Manual and more information in our [Wiki](https://github.com/ElectronicCats/CatSatZero/wiki)
 
 Electronic Cats invests time and resources providing this open source design, please support Electronic Cats and open-source hardware by purchasing products from Electronic Cats!
 
 Designed by Electronic Cats.
+
+<a href="https://electroniccats.com">
+  <img src="https://electroniccats.com/wp-content/uploads/badge_store.png" height="104" />
+</a>
 
 ## License
 
