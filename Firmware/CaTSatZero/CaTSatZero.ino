@@ -59,8 +59,8 @@
 
 */
 //Uncomment for debug
-#define DEBUG
-#define DEBUG2
+//#define DEBUG
+//#define DEBUG2
 
 #include <SPI.h>
 #include <LoRa.h>
@@ -238,7 +238,6 @@ void setup() {
 
   /******************/
 
-  Serial.println("LoRa Ok");
   //This begins the CCS811 sensor and prints error status of .begin()
   if (!ccs.begin(CCS811_ADDR)) {
     Serial.println("Failed to start sensor CCS811! Please check your wiring.");
@@ -276,7 +275,6 @@ void setup() {
     while (1);
   }
   
-  Serial.println("Ballon");
   ballonModeGPS();
   
 #ifdef GEIGER
