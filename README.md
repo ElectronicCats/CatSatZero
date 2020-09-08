@@ -14,6 +14,8 @@ Designed by Electronic Cats.
 
 ## License
 
+![OpenSourceLicense](https://github.com/ElectronicCats/AjoloteBoard/raw/master/OpenSourceLicense.png)
+
 Firmware released under an GNU AGPL v3.0 license. See the LICENSE file for more information.
 
 Hardware released under an CERN Open Hardware Licence v1.2. See the LICENSE_HARDWARE file for more information.
